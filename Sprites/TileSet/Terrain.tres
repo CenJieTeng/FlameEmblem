@@ -1,0 +1,26 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://v8v871e5jfgw"]
+
+[ext_resource type="Texture2D" uid="uid://cjusv06xdfh7v" path="res://Sprites/terrain.png" id="1_fcwad"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kldst"]
+texture = ExtResource("1_fcwad")
+0:0/0 = 0
+0:0/0/custom_data_0 = "plain"
+0:0/0/custom_data_1 = 1
+1:0/0 = 0
+1:0/0/custom_data_0 = "mountain"
+1:0/0/custom_data_1 = 99
+0:1/0 = 0
+2:0/0 = 0
+2:0/0/custom_data_0 = "sea"
+2:0/0/custom_data_1 = 99
+3:0/0 = 0
+3:0/0/custom_data_0 = "foest"
+3:0/0/custom_data_1 = 2
+
+[resource]
+custom_data_layer_0/name = "type"
+custom_data_layer_0/type = 4
+custom_data_layer_1/name = "move_cost"
+custom_data_layer_1/type = 2
+sources/0 = SubResource("TileSetAtlasSource_kldst")
