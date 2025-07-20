@@ -1,9 +1,113 @@
-[gd_scene format=3 uid="uid://doiltvx600bgw"]
+[gd_scene load_steps=8 format=3 uid="uid://doiltvx600bgw"]
 
-[node name="Control" type="Control"]
+[ext_resource type="Script" uid="uid://dbgft16cjida" path="res://Scripts/UI/UnitMenu.gd" id="1_6y8n0"]
+[ext_resource type="Texture2D" uid="uid://0lv2h4wsb5p4" path="res://Sprites/UI/MenuBackgrounds/BaseMenuBackground.png" id="1_chtq0"]
+[ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="2_lcm2s"]
+[ext_resource type="Texture2D" uid="uid://crrstbiml7viy" path="res://Sprites/UI/MenuBackgrounds/menuHand.png" id="3_i611i"]
+
+[sub_resource type="Animation" id="Animation_i611i"]
+length = 0.001
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TextureRect:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-15, 5)]
+}
+
+[sub_resource type="Animation" id="Animation_lcm2s"]
+resource_name = "default"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath("TextureRect:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 0.5, 0.5),
+"update": 0,
+"values": [Vector2(-15, 5), Vector2(-10, 5), Vector2(-15, 5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i611i"]
+_data = {
+&"RESET": SubResource("Animation_i611i"),
+&"default": SubResource("Animation_lcm2s")
+}
+
+[node name="UnitMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 0
+script = ExtResource("1_6y8n0")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 33.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_chtq0")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="VBoxContainer#Label1" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_lcm2s")
+theme_override_font_sizes/font_size = 9
+text = "攻击"
+
+[node name="VBoxContainer#Label2" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_lcm2s")
+theme_override_font_sizes/font_size = 9
+text = "物品"
+
+[node name="VBoxContainer#Label3" type="Label" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_lcm2s")
+theme_override_font_sizes/font_size = 9
+text = "待机"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_i611i")
+}
+autoplay = "default"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -15.0
+offset_top = 5.0
+offset_right = -3.05176e-05
+offset_bottom = 17.0
+texture = ExtResource("3_i611i")

@@ -10,10 +10,12 @@ var stats=  {
 }
 var old_grid_position = Vector2i.ZERO
 var grid_position = Vector2i.ZERO
-var is_move = false
+var is_move := false
+var is_standby := false
 var moveable_grids : Array[Vector2i] = []
 var move_path : Array[Vector2i] = []
 var simple_move_path : Array[Vector2i] = []
+var attackable_grids : Array[Vector2i] = []
 
 var game_manager : GameManager
 var grid_map : CustomGridMap
@@ -33,6 +35,11 @@ func init(p_name: String, pos: Vector2i) -> void:
 	grid_position = pos
 	position = grid_map.grid_to_world(grid_position)
 	
+func set_pos(grid: Vector2i):
+	old_grid_position = grid_position
+	grid_position = grid
+	position = grid_map.grid_to_world(grid)
+	game_manager.update_unit_pos_map()
 
 func get_move_path(walkable_cells: Array[Vector2i], start: Vector2i, end: Vector2i) -> PackedVector2Array:
 	var astar = AStar2D.new()
@@ -58,8 +65,8 @@ func get_move_path(walkable_cells: Array[Vector2i], start: Vector2i, end: Vector
 	
 	var path = astar.get_point_path(start_id, end_id)
 	return path
-
-func show_moveable():
+	
+func calc_moveable():
 	moveable_grids.clear()
 	var queue = []
 	var visited = {}
@@ -84,10 +91,74 @@ func show_moveable():
 				visited[next_pos] = true
 				moveable_grids.append(next_pos)
 				queue.push_back({"pos": next_pos, "move_cost": current.move_cost + terrain_data.move_cost})
-	
-	grid_map.create_moveable_sprites(moveable_grids)
 
-func cal_move_path(target_grid: Vector2i):
+func show_moveable():
+	grid_map.create_moveable_sprites(moveable_grids)
+	
+func clac_attckable():
+	attackable_grids.clear()
+	var attack_range = 1
+	var queue = []
+	var visited = {}
+	for pos in moveable_grids:
+		queue.push_back({"pos": pos, "move_cost": 0})
+		visited[pos] = true
+		
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		
+		if current.move_cost < stats["mov"]:
+			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+				var next_pos = current.pos + dir
+				
+				if visited.has(next_pos):
+					continue
+					
+				var terrain_data = grid_map.get_terrain_data(next_pos)
+				if not terrain_data:
+					continue
+					
+				if current["move_cost"] + 1 > attack_range:
+					continue
+					
+				visited[next_pos] = true
+				attackable_grids.append(next_pos)
+				queue.push_back({"pos": next_pos, "move_cost": current.move_cost + 1})
+	
+	grid_map.create_attackable_sprites(attackable_grids)
+	
+func clac_attckable2():
+	attackable_grids.clear()
+	var attack_range = 1
+	var queue = []
+	var visited = {}
+	visited[grid_position] = true
+	queue.push_back({"pos": grid_position, "move_cost": 0})
+		
+	while not queue.is_empty():
+		var current = queue.pop_front()
+		
+		if current.move_cost < stats["mov"]:
+			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+				var next_pos = current.pos + dir
+				
+				if visited.has(next_pos):
+					continue
+					
+				var terrain_data = grid_map.get_terrain_data(next_pos)
+				if not terrain_data:
+					continue
+					
+				if current["move_cost"] + 1 > attack_range:
+					continue
+					
+				visited[next_pos] = true
+				attackable_grids.append(next_pos)
+				queue.push_back({"pos": next_pos, "move_cost": current.move_cost + 1})
+	
+	grid_map.create_attackable_sprites(attackable_grids)
+
+func calc_move_path(target_grid: Vector2i):
 	if moveable_grids.has(target_grid):
 		var path = get_move_path(moveable_grids, grid_position, target_grid)
 		move_path.clear()
@@ -107,8 +178,13 @@ func cal_move_path(target_grid: Vector2i):
 		#print("path", move_path)
 		#print("simple_path", simple_move_path)
 
-func move_to():
+func move_to(target_grid: Vector2i = Vector2i(-1, -1)):
+	if target_grid != Vector2i(-1, -1):
+		calc_moveable()
+		calc_move_path(target_grid)
+	
 	if is_move or simple_move_path.is_empty():
+		printerr("move path is empty")
 		return
 	is_move = true
 	old_grid_position = grid_position
@@ -133,3 +209,8 @@ func move_to():
 	simple_move_path.clear()
 	animator.play("idle")
 	emit_signal("unit_signal", self, "move_complate")
+	
+func standby():
+	is_standby = true
+	animator.material = preload("res://Shader/SpriteGray.tres")
+	emit_signal("unit_signal", self, "standby")

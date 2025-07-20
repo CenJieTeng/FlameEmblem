@@ -4,6 +4,7 @@ class_name CustomGridMap
 @export var terrain_layer : TileMapLayer;
 @export var move_layer : TileMapLayer;
 @export var unit_layer : TileMapLayer;
+@export var map_size : Vector2i
 
 var terrain_data : Dictionary[Vector2i, TerrainData]
 
@@ -33,6 +34,11 @@ func world_to_grid(pos: Vector2) -> Vector2i:
 func grid_to_world(grid: Vector2i) -> Vector2:
 	return terrain_layer.map_to_local(grid)
 
+func is_grid_in_map(grid: Vector2i) -> bool:
+	if grid.x < 0 || grid.y < 0 || grid.x >= map_size.x || grid.y >= map_size.y :
+		return false
+	return true
+
 func create_moveable_sprites(grid_list: Array[Vector2i]):
 	for grid in grid_list:
 		_create_moveable_sprite(grid)
@@ -40,6 +46,17 @@ func create_moveable_sprites(grid_list: Array[Vector2i]):
 func _create_moveable_sprite(grid: Vector2i):
 	var anim = AnimatedSprite2D.new()
 	anim.sprite_frames = preload("res://Sprites/Animation/BlueHightLight.tres")
+	anim.play("default")
+	anim.position = grid_to_world(grid)
+	move_layer.add_child(anim)
+	
+func create_attackable_sprites(grid_list: Array[Vector2i]):
+	for grid in grid_list:
+		_create_attackable_sprite(grid)
+	
+func _create_attackable_sprite(grid: Vector2i):
+	var anim = AnimatedSprite2D.new()
+	anim.sprite_frames = preload("res://Sprites/Animation/RedHightLight.tres")
 	anim.play("default")
 	anim.position = grid_to_world(grid)
 	move_layer.add_child(anim)

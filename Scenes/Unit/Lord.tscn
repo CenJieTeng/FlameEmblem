@@ -176,6 +176,7 @@ script = ExtResource("1_6biqk")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_sk4n8")
-animation = &"move_left"
+animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.595462
+frame = 1
+frame_progress = 0.162525

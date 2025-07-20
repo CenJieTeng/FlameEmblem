@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://c1d6gaawjlytv"]
+[gd_scene load_steps=12 format=4 uid="uid://c1d6gaawjlytv"]
 
 [ext_resource type="Script" uid="uid://dnrjunkk0fm1g" path="res://Scripts/GameManager.gd" id="1_d4mhe"]
 [ext_resource type="Script" uid="uid://ojvl5sac0t75" path="res://Scripts/GridMap.gd" id="2_5jvun"]
@@ -6,6 +6,9 @@
 [ext_resource type="TileSet" uid="uid://v8v871e5jfgw" path="res://Sprites/TileSet/Terrain.tres" id="4_iax3i"]
 [ext_resource type="Texture2D" uid="uid://bdou08viywdqn" path="res://Sprites/Highlights/BlueHighlight.png" id="5_5jvun"]
 [ext_resource type="TileSet" uid="uid://ddl3eypiawigf" path="res://Sprites/TileSet/MovementArrows.tres" id="6_uwe06"]
+[ext_resource type="PackedScene" uid="uid://doiltvx600bgw" path="res://Scenes/UI/UnitMenu.tscn" id="7_iax3i"]
+[ext_resource type="Script" uid="uid://d0wie4uchncx" path="res://Scripts/Cursor.gd" id="8_n557l"]
+[ext_resource type="SpriteFrames" uid="uid://dwt8du8lawfke" path="res://Sprites/Animation/Cursor.tres" id="9_vq7xy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uwe06"]
 texture = ExtResource("5_5jvun")
@@ -29,19 +32,24 @@ texture = ExtResource("5_5jvun")
 [sub_resource type="TileSet" id="TileSet_kldst"]
 sources/0 = SubResource("TileSetAtlasSource_uwe06")
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("grid_map", "move_path_layer")]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("grid_map", "move_path_layer", "unit_menu", "cursor")]
+z_index = 1
 script = ExtResource("1_d4mhe")
 grid_map = NodePath("Map")
 move_path_layer = NodePath("Map/MovePathLayer")
+unit_menu = NodePath("CanvasLayer/UnitMenu")
+cursor = NodePath("Cursor")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(120, 80)
 
 [node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("terrain_layer", "move_layer", "unit_layer")]
+z_as_relative = false
 script = ExtResource("2_5jvun")
 terrain_layer = NodePath("TerrainLayer")
 move_layer = NodePath("MoveLayer")
 unit_layer = NodePath("UnitLayer")
+map_size = Vector2i(15, 10)
 
 [node name="Background" type="Sprite2D" parent="Map"]
 position = Vector2(120, 80)
@@ -62,3 +70,24 @@ tile_set = SubResource("TileSet_kldst")
 tile_set = ExtResource("6_uwe06")
 
 [node name="UnitLayer" type="TileMapLayer" parent="Map"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UnitMenu" parent="CanvasLayer" instance=ExtResource("7_iax3i")]
+visible = false
+offset_left = 164.0
+offset_top = 52.0
+offset_right = 164.0
+offset_bottom = 52.0
+
+[node name="Cursor" type="Node2D" parent="."]
+script = ExtResource("8_n557l")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Cursor"]
+sprite_frames = ExtResource("9_vq7xy")
+offset = Vector2(-0.5, 1)
+
+[node name="Timer" type="Timer" parent="Cursor"]
+wait_time = 0.1
+
+[connection signal="timeout" from="Cursor/Timer" to="Cursor" method="_on_timer_timeout"]
