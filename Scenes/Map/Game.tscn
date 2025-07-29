@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://c1d6gaawjlytv"]
+[gd_scene load_steps=13 format=4 uid="uid://c1d6gaawjlytv"]
 
 [ext_resource type="Script" uid="uid://dnrjunkk0fm1g" path="res://Scripts/GameManager.gd" id="1_d4mhe"]
 [ext_resource type="Script" uid="uid://ojvl5sac0t75" path="res://Scripts/GridMap.gd" id="2_5jvun"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://doiltvx600bgw" path="res://Scenes/UI/UnitMenu.tscn" id="7_iax3i"]
 [ext_resource type="Script" uid="uid://d0wie4uchncx" path="res://Scripts/Cursor.gd" id="8_n557l"]
 [ext_resource type="SpriteFrames" uid="uid://dwt8du8lawfke" path="res://Sprites/Animation/Cursor.tres" id="9_vq7xy"]
+[ext_resource type="PackedScene" uid="uid://bwoja86ve351j" path="res://Scenes/UI/UnitInfoUI.tscn" id="10_f6hth"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uwe06"]
 texture = ExtResource("5_5jvun")
@@ -79,6 +80,8 @@ offset_left = 164.0
 offset_top = 52.0
 offset_right = 164.0
 offset_bottom = 52.0
+
+[node name="UnitInfo" parent="CanvasLayer" instance=ExtResource("10_f6hth")]
 
 [node name="Cursor" type="Node2D" parent="."]
 script = ExtResource("8_n557l")

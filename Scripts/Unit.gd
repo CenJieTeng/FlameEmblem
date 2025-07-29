@@ -1,13 +1,21 @@
 extends Node2D
 class_name Unit
 
+enum UnitCamp
+{
+	PLAYER,
+	ENEMY
+}
+
 var unit_name : String = "名称"
 var stats=  {
+	"max_hp": 20,
 	"hp": 20,
 	"atk": 8,
 	"def": 4,
 	"mov": 7  # 移动力
 }
+var camp = UnitCamp.PLAYER
 var old_grid_position = Vector2i.ZERO
 var grid_position = Vector2i.ZERO
 var is_move := false
@@ -30,9 +38,10 @@ func _ready() -> void:
 		{ "unit": Unit, "action": TYPE_STRING }
 	])
 
-func init(p_name: String, pos: Vector2i) -> void:
+func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	unit_name = p_name
 	grid_position = pos
+	camp = p_camp
 	position = grid_map.grid_to_world(grid_position)
 	
 func set_pos(grid: Vector2i):
@@ -158,6 +167,11 @@ func clac_attckable2():
 	
 	grid_map.create_attackable_sprites(attackable_grids)
 
+func is_in_attack_range(target_grid: Vector2i):
+	if attackable_grids.has(target_grid):
+		return true
+	return false
+
 func calc_move_path(target_grid: Vector2i):
 	if moveable_grids.has(target_grid):
 		var path = get_move_path(moveable_grids, grid_position, target_grid)
@@ -214,3 +228,4 @@ func standby():
 	is_standby = true
 	animator.material = preload("res://Shader/SpriteGray.tres")
 	emit_signal("unit_signal", self, "standby")
+	
