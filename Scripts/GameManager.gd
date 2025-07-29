@@ -131,17 +131,18 @@ func handle_input() -> UnitCommand:
 				select_unit(unit)
 		PlayState.SELECT_UNIT:
 			if Input.is_action_just_pressed("mouse_left"):
-				if not move_path_gold_sprite:
+				if cursor.pos == current_unit.grid_position:
 					grid_map.clear_moveable_sprites()
 					play_state = PlayState.SELECT_ACTION
 					show_menu()
 					return
-				var gold_grid = grid_map.world_to_grid(move_path_gold_sprite.position)
-				if cursor.pos == gold_grid and current_unit.move_path.size() >= 2:
-					move_path_layer.clear()
-					if move_path_gold_sprite: move_path_gold_sprite.queue_free()
-					grid_map.clear_moveable_sprites()
-					return UnitMoveCommand.new(current_unit, gold_grid)
+				if move_path_gold_sprite:
+					var gold_grid = grid_map.world_to_grid(move_path_gold_sprite.position)
+					if cursor.pos == gold_grid and current_unit.move_path.size() >= 2:
+						move_path_layer.clear()
+						if move_path_gold_sprite: move_path_gold_sprite.queue_free()
+						grid_map.clear_moveable_sprites()
+						return UnitMoveCommand.new(current_unit, gold_grid)
 		PlayState.SELECT_ATTACK_TARGET:
 			if Input.is_action_just_pressed("mouse_left"):
 				if current_unit.is_in_attack_range(cursor.pos):
@@ -285,11 +286,12 @@ func show_menu():
 
 func check_hud_state():
 	unit_info_ui.visible = false
-	if play_state == PlayState.NONE:
-		var unit = get_unit_by_grid(cursor.pos)
-		if unit:
-			unit_info_ui.visible = true
-			unit_info_ui.update_info(unit)
+	if game_state == GameState.WAITING_FOR_PLAYER:
+		if play_state == PlayState.NONE:
+			var unit = get_unit_by_grid(cursor.pos)
+			if unit:
+				unit_info_ui.visible = true
+				unit_info_ui.update_info(unit)
 		
 func select_menu_item(index: int):
 	match index:
@@ -309,8 +311,53 @@ func attack(attack_unit: Unit, target_unit: Unit):
 		print(attack_unit.unit_name, " 攻击 ", target_unit.unit_name, " 造成 ", damage, " 伤害")
 		print(target_unit.unit_name, " 剩余 ", target_unit.stats["hp"], " 生命值")
 
-func fight(attack_unit: Unit, target_unit: Unit):
+func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, loops: int = 3):
+	var shake = create_tween().set_loops(loops)
+
+	# 向左震动
+	shake.tween_property(target, "rotation", deg_to_rad(-strength), duration * 0.33).set_trans(Tween.TRANS_SINE)
+
+	# 向右震动
+	shake.tween_property(target, "rotation", deg_to_rad(strength), duration * 0.33).set_trans(Tween.TRANS_SINE)
+
+	# 回正
+	shake.tween_property(target, "rotation", 0, duration * 0.33).set_trans(Tween.TRANS_SINE)
+	await shake.finished
+
+func attack_anim(attack_unit: Unit, target_unit: Unit):
+	var original_z_index = attack_unit.z_index
+	attack_unit.z_index = 100
+
+	var tween = create_tween()
+	var origin = attack_unit.position
+	var tween_time = 0.2
+	tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.6), tween_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await tween.finished
+
+	# 被攻击单位加上闪烁效果，使用tween实现
+	var tween_time2 = 0.08
+	tween =	create_tween()
+	await tween.tween_property(target_unit, "modulate", Color(2, 2, 2, 1), tween_time2).finished
+
 	attack(attack_unit, target_unit)
+
+	# 震动
+	await shake_target(target_unit, 3.0, 0.1, 1)
+
+	tween =	create_tween()
+	await tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 1), tween_time2).finished
+
+	tween = create_tween()
+	tween.tween_property(attack_unit, "position", origin, tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+	attack_unit.z_index = original_z_index
+
+
+func fight(attack_unit: Unit, target_unit: Unit):
+	# 等待攻击动画播放结束
+	await attack_anim(attack_unit, target_unit)
+	await attack_anim(target_unit, attack_unit)
 	unit_menu.visible = false
 	current_unit = null
 	target_unit = null
