@@ -1,0 +1,220 @@
+[gd_scene load_steps=7 format=3 uid="uid://bguw15878n0a2"]
+
+[ext_resource type="Script" uid="uid://dlus0ohbnjpuu" path="res://Scripts/UI/UnitFightInfoUI.gd" id="1_4w3jd"]
+[ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="3_3lev3"]
+[ext_resource type="Texture2D" uid="uid://c43xe8vs83y51" path="res://Sprites/UI/HealthBar/HealthBarBG.png" id="4_i32ox"]
+[ext_resource type="Texture2D" uid="uid://chhd4jp3afc6b" path="res://Sprites/UI/HealthBar/HealthBar.png" id="5_v5y0w"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dhib6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ppopw"]
+texture = ExtResource("5_v5y0w")
+
+[node name="UnitInfoUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4w3jd")
+
+[node name="Panel1" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.5
+offset_top = -19.5
+offset_right = -14.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Name1" type="Label" parent="Panel1"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -27.5
+offset_right = 27.5
+offset_bottom = 14.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("3_3lev3")
+theme_override_font_sizes/font_size = 12
+text = "Lord"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HPLabel" type="Label" parent="Panel1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -7.0
+offset_right = -14.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_3lev3")
+theme_override_font_sizes/font_size = 12
+text = "HP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HP1" type="Label" parent="Panel1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -5.0
+offset_right = 25.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_3lev3")
+theme_override_font_sizes/font_size = 10
+text = "99/99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HealthBackground" type="TextureRect" parent="Panel1"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -26.5
+offset_top = -10.0
+offset_right = 26.5
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("4_i32ox")
+
+[node name="ProgressBar1" type="ProgressBar" parent="Panel1/HealthBackground"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -52.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 3.0
+grow_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxEmpty_dhib6")
+theme_override_styles/fill = SubResource("StyleBoxTexture_ppopw")
+value = 50.0
+show_percentage = false
+metadata/_edit_lock_ = true
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 14.5
+offset_top = -19.5
+offset_right = 85.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Name2" type="Label" parent="Panel2"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -27.5
+offset_right = 27.5
+offset_bottom = 14.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("3_3lev3")
+theme_override_font_sizes/font_size = 12
+text = "Lord"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HPLabel" type="Label" parent="Panel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.0
+offset_top = -7.0
+offset_right = -14.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_3lev3")
+theme_override_font_sizes/font_size = 12
+text = "HP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HP2" type="Label" parent="Panel2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -5.0
+offset_right = 25.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_3lev3")
+theme_override_font_sizes/font_size = 10
+text = "99/99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HealthBackground" type="TextureRect" parent="Panel2"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -26.5
+offset_top = -10.0
+offset_right = 26.5
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("4_i32ox")
+
+[node name="ProgressBar2" type="ProgressBar" parent="Panel2/HealthBackground"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -52.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 3.0
+grow_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxEmpty_dhib6")
+theme_override_styles/fill = SubResource("StyleBoxTexture_ppopw")
+value = 50.0
+show_percentage = false
+metadata/_edit_lock_ = true

@@ -5,6 +5,7 @@ class_name GameManager
 @export var move_path_layer : TileMapLayer
 @export var unit_menu : Control
 @onready var unit_info_ui := $CanvasLayer/UnitInfo
+@onready var unit_fight_info_ui := $CanvasLayer/UnitInfoUI
 @export var cursor : Cursor
 
 # 单位相关
@@ -25,7 +26,10 @@ enum GameState{
 	WAITING_FOR_AI,
 	GAME_RUNING
 }
-var game_state := GameState.WAITING_FOR_PLAYER
+var game_state := GameState.WAITING_FOR_PLAYER:
+	set(value):
+		game_state = value
+		check_hud_state()
 
 enum PlayState{
 	NONE,
@@ -58,9 +62,9 @@ var enemy_unit : Unit
 
 func _ready() -> void:
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
-	create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
-	enemy_unit = create_unit("敌人1", Vector2i(6, 4), Unit.UnitCamp.ENEMY)
-	cursor.set_pos2(Vector2i(4, 4))
+	create_unit("角色1", Vector2i(3, 4), Unit.UnitCamp.PLAYER)
+	enemy_unit = create_unit("敌人1", Vector2i(4, 4), Unit.UnitCamp.ENEMY)
+	cursor.set_pos2(Vector2i(3, 4))
 	cursor.connect("pos_change", _on_cursor_pos_change)
 	
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
@@ -325,14 +329,31 @@ func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, 
 	await shake.finished
 
 func attack_anim(attack_unit: Unit, target_unit: Unit):
-	var original_z_index = attack_unit.z_index
-	attack_unit.z_index = 100
+	var attack_z_index = attack_unit.z_index
+	var target_z_index = target_unit.z_index
+	attack_unit.z_index = 100 * attack_unit.grid_position.y + 1
+	target_unit.z_index = 100 * target_unit.grid_position.y
+
+	var anim : String
+	if target_unit.grid_position.x > attack_unit.grid_position.x: anim = "move_right"
+	if target_unit.grid_position.x < attack_unit.grid_position.x: anim = "move_left"
+	if target_unit.grid_position.y > attack_unit.grid_position.y: anim = "move_down"
+	if target_unit.grid_position.y < attack_unit.grid_position.y: anim = "move_up"
+	attack_unit.animator.play(anim)
+	attack_unit.animator.stop()
+
+	await get_tree().create_timer(0.3).timeout
+	attack_unit.animator.play()
 
 	var tween = create_tween()
 	var origin = attack_unit.position
 	var tween_time = 0.2
 	tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.6), tween_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	#tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.55), tween_time/2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	#tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.6), tween_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await tween.finished
+
+	attack_unit.animator.speed_scale = 2.0
 
 	# 被攻击单位加上闪烁效果，使用tween实现
 	var tween_time2 = 0.08
@@ -347,18 +368,43 @@ func attack_anim(attack_unit: Unit, target_unit: Unit):
 	tween =	create_tween()
 	await tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 1), tween_time2).finished
 
+	attack_unit.animator.speed_scale = 1.0
+	attack_unit.animator.stop()
+
 	tween = create_tween()
 	tween.tween_property(attack_unit, "position", origin, tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await tween.finished
 
-	attack_unit.z_index = original_z_index
+	attack_unit.animator.play("idle")
+
+	attack_unit.z_index = attack_z_index
+	target_unit.z_index = target_z_index
 
 
 func fight(attack_unit: Unit, target_unit: Unit):
+	game_state = GameState.GAME_RUNING
+
+	unit_fight_info_ui.visible = true
+	unit_fight_info_ui.update_info(attack_unit, target_unit)
+	
+	var window_size = DisplayServer.window_get_size() / 3.2
+	if attack_unit.position.y < window_size.y / 2:
+		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y * 4 / 5)
+	else:
+		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y / 5)
+
+
 	# 等待攻击动画播放结束
 	await attack_anim(attack_unit, target_unit)
+	unit_fight_info_ui.update_info(attack_unit, target_unit)
 	await attack_anim(target_unit, attack_unit)
+	unit_fight_info_ui.update_info(attack_unit, target_unit)
+
 	unit_menu.visible = false
 	current_unit = null
 	target_unit = null
+
+	await get_tree().create_timer(1).timeout
+	unit_fight_info_ui.visible = false
+	
 	push_command(UnitStandbyCommand.new(attack_unit))
