@@ -43,6 +43,66 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	grid_position = pos
 	camp = p_camp
 	position = grid_map.grid_to_world(grid_position)
+	animator.sprite_frames = load("res://Sprites/Animation/UnitSpriteFrames/Lord.tres").duplicate(true)
+	
+	# 创建待机动画
+	create_idle_anim()
+
+	# 创建移动动画
+	create_move_anim()
+	
+	animator.play("idle")
+	
+func create_idle_anim():
+	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][0])
+	var atlas1 = AtlasTexture.new()
+	atlas1.atlas = tex
+	atlas1.region = Rect2(0, 0, 64, 48)
+	atlas1.margin = Rect2(0, -8, 0, 0)
+	animator.sprite_frames.set_frame("idle", 0, atlas1)
+	var atlas2 = AtlasTexture.new()
+	atlas2.atlas = tex
+	atlas2.region = Rect2(64, 0, 64, 48)
+	atlas2.margin = Rect2(0, -8, 0, 0)
+	animator.sprite_frames.set_frame("idle", 1, atlas2)
+	var atlas3 = AtlasTexture.new()
+	atlas3.atlas = tex
+	atlas3.region = Rect2(128, 0, 64, 48)
+	atlas3.margin = Rect2(0, -8, 0, 0)
+	animator.sprite_frames.set_frame("idle", 2, atlas3)
+	animator.sprite_frames.set_frame("idle", 3, atlas2)
+	animator.sprite_frames.set_frame("idle", 4, atlas1)
+	
+func create_move_anim():
+	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][1])
+	var offsety = -11
+	for i in range(4):
+		var atlas = AtlasTexture.new()
+		atlas.atlas = tex
+		atlas.region = Rect2(i * 48, 0, 48, 40)
+		atlas.margin = Rect2(0, offsety, 0, 0)
+		animator.sprite_frames.set_frame("move_down", i, atlas)
+		
+	for i in range(4):
+		var atlas = AtlasTexture.new()
+		atlas.atlas = tex
+		atlas.region = Rect2(i * 48, 40, 48, 40)
+		atlas.margin = Rect2(0, offsety, 0, 0)
+		animator.sprite_frames.set_frame("move_left", i, atlas)
+		
+	for i in range(4):
+		var atlas = AtlasTexture.new()
+		atlas.atlas = tex
+		atlas.region = Rect2(i * 48, 80, 48, 40)
+		atlas.margin = Rect2(0, offsety, 0, 0)
+		animator.sprite_frames.set_frame("move_right", i, atlas)
+	
+	for i in range(4):
+		var atlas = AtlasTexture.new()
+		atlas.atlas = tex
+		atlas.region = Rect2(i * 48, 122, 48, 40)
+		atlas.margin = Rect2(0, offsety, 0, 0)
+		animator.sprite_frames.set_frame("move_up", i, atlas)
 	
 func set_pos(grid: Vector2i):
 	old_grid_position = grid_position

@@ -206,7 +206,7 @@ func handle_ai_input():
 func create_unit(p_name: String, grid: Vector2i, camp: Unit.UnitCamp) -> Unit:
 	if pos_to_unit_map.has(grid):
 		return pos_to_unit_map[grid]
-	var unit = preload("res://Scenes/Unit/Lord.tscn").instantiate() as Unit
+	var unit = preload("res://Scenes/Unit/Unit.tscn").instantiate() as Unit
 	grid_map.unit_layer.add_child(unit)
 	unit.init(p_name, grid, camp)
 	unit_list.append(unit)

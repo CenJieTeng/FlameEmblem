@@ -1,5 +1,10 @@
 extends Node2D
 
+var name_to_unit_sprite_frames_map = {
+	"角色1" : ["res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF.png", "res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF_move.png"],
+	"敌人1" : ["res://Sprites/Characters/MapSprites/Knight/enemyKnightM.png", "res://Sprites/Characters/MapSprites/Knight/enemyKnightM_move.png"],
+}
+
 func _ready() -> void:
 	pass
 
