@@ -63,7 +63,10 @@ var enemy_unit : Unit
 func _ready() -> void:
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
 	create_unit("角色1", Vector2i(3, 4), Unit.UnitCamp.PLAYER)
-	enemy_unit = create_unit("敌人1", Vector2i(4, 4), Unit.UnitCamp.ENEMY)
+	create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
+	create_unit("敌人1", Vector2i(3, 5), Unit.UnitCamp.ENEMY)
+	create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
+	enemy_unit = create_unit("敌人1", Vector2i(8, 4), Unit.UnitCamp.ENEMY)
 	cursor.set_pos2(Vector2i(3, 4))
 	cursor.connect("pos_change", _on_cursor_pos_change)
 	
@@ -113,6 +116,8 @@ func _on_unit_signal(unit: Unit, action: String):
 			show_menu()
 		if action == "standby":
 			check_wave_finish()
+			if current_wave_camp == Unit.UnitCamp.PLAYER:
+				play_state = PlayState.NONE
 
 func _on_cursor_pos_change():
 	if current_unit and play_state == PlayState.SELECT_UNIT:
@@ -140,7 +145,7 @@ func handle_input() -> UnitCommand:
 					play_state = PlayState.SELECT_ACTION
 					show_menu()
 					return
-				if move_path_gold_sprite:
+				if move_path_gold_sprite and not pos_to_unit_map.has(cursor.pos):
 					var gold_grid = grid_map.world_to_grid(move_path_gold_sprite.position)
 					if cursor.pos == gold_grid and current_unit.move_path.size() >= 2:
 						move_path_layer.clear()

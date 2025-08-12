@@ -153,8 +153,9 @@ func calc_moveable():
 				var terrain_data = grid_map.get_terrain_data(next_pos)
 				if not terrain_data or current.move_cost + terrain_data.move_cost > stats["mov"]:
 					continue
-
-				if next_pos != grid_position and game_manager.pos_to_unit_map.has(next_pos):
+					
+				var unit = game_manager.get_unit_by_grid(next_pos)
+				if unit and unit.camp != camp:
 					continue
 					
 				visited[next_pos] = true
