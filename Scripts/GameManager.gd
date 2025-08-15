@@ -4,9 +4,13 @@ class_name GameManager
 @export var grid_map : CustomGridMap
 @export var move_path_layer : TileMapLayer
 @export var unit_menu : Control
-@onready var unit_info_ui := $CanvasLayer/UnitInfo
-@onready var unit_fight_info_ui := $CanvasLayer/UnitInfoUI
+@onready var unit_info_ui : Control = $CanvasLayer/UnitInfo
+@onready var unit_fight_info_ui  : Control = $CanvasLayer/UnitInfoUI
+@onready var terrain_info_ui  : Control = $CanvasLayer/TerrainInfoUI
 @export var cursor : Cursor
+
+var cursor_dir : Vector2
+var window_size = DisplayServer.window_get_size() / 3.2
 
 # 单位相关
 var unit_list : Array[Unit] = []
@@ -67,8 +71,8 @@ func _ready() -> void:
 	create_unit("敌人1", Vector2i(3, 5), Unit.UnitCamp.ENEMY)
 	create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
 	enemy_unit = create_unit("敌人1", Vector2i(8, 4), Unit.UnitCamp.ENEMY)
-	cursor.set_pos2(Vector2i(3, 4))
 	cursor.connect("pos_change", _on_cursor_pos_change)
+	cursor.set_pos2(Vector2i(3, 4))
 	
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
 	default_font_size = 10
@@ -120,6 +124,9 @@ func _on_unit_signal(unit: Unit, action: String):
 				play_state = PlayState.NONE
 
 func _on_cursor_pos_change():
+	cursor_dir = grid_map.get_direction_to_center_from_grid(cursor.pos)
+	print("偏移向量: ", "左" if cursor_dir.x < 0 else "右", "上" if cursor_dir.y < 0 else "下");
+	
 	if current_unit and play_state == PlayState.SELECT_UNIT:
 		current_unit.calc_move_path(cursor.pos)
 		if current_unit.move_path.size() < 2:
@@ -287,7 +294,6 @@ func show_menu():
 	if game_state != GameState.WAITING_FOR_PLAYER:
 		return
 	unit_menu.show_ui()
-	var window_size = DisplayServer.window_get_size() / 3.2
 	if current_unit.position.x < window_size.x / 2:
 		unit_menu.position = Vector2(window_size.x * 4 / 5, window_size.y / 3)
 	else:
@@ -295,12 +301,28 @@ func show_menu():
 
 func check_hud_state():
 	unit_info_ui.visible = false
+	terrain_info_ui.visible = false
+	var ui_slot_list : Array[int]
 	if game_state == GameState.WAITING_FOR_PLAYER:
 		if play_state == PlayState.NONE:
 			var unit = get_unit_by_grid(cursor.pos)
 			if unit:
 				unit_info_ui.visible = true
 				unit_info_ui.update_info(unit)
+				if cursor_dir.y < 0:
+					unit_info_ui.set_position(Vector2(5, window_size.y - 35))
+					ui_slot_list.append(3)
+				else:
+					unit_info_ui.set_position(Vector2(5, 5))
+					ui_slot_list.append(1)
+			var terrain_data = grid_map.get_terrain_data(cursor.pos)
+			if terrain_data:
+				terrain_info_ui.visible = true
+				terrain_info_ui.update_info(terrain_data)
+				if cursor_dir.x < 0 or ui_slot_list.has(3):
+					terrain_info_ui.set_position(Vector2(window_size.x - 40, window_size.y - 40))
+				else:
+					terrain_info_ui.set_position(Vector2(5, window_size.y - 40))
 		
 func select_menu_item(index: int):
 	match index:

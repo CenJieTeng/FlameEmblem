@@ -26,10 +26,9 @@ script = ExtResource("1_irwwd")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 105.0
-offset_bottom = 45.0
+offset_right = 100.0
+offset_bottom = 40.0
+scale = Vector2(0.8, 0.8)
 
 [node name="TextureRect" type="TextureRect" parent="Panel"]
 layout_mode = 1

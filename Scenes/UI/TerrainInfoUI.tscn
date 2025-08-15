@@ -1,0 +1,87 @@
+[gd_scene load_steps=5 format=3 uid="uid://bv4t4e4mwiaro"]
+
+[ext_resource type="Script" uid="uid://dtysf2wi78k5l" path="res://Scripts/UI/TerrainInfoUI.gd" id="1_3cywr"]
+[ext_resource type="Texture2D" uid="uid://dclvxnfe2wp6u" path="res://Sprites/UI/MenuBackgrounds/QuickTileInfo.png" id="1_yslyu"]
+[ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="2_x7p8l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x7p8l"]
+
+[node name="TerrainInfoUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3cywr")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(45, 44)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.8, 0.8)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_x7p8l")
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_yslyu")
+
+[node name="Terrain" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -19.5
+offset_top = 4.0
+offset_right = 20.5
+offset_bottom = 27.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_x7p8l")
+theme_override_font_sizes/font_size = 12
+text = "地形"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Def" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.5
+offset_top = -7.0
+offset_right = 31.5
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_x7p8l")
+theme_override_font_sizes/font_size = 10
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Avo" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.5
+offset_top = 2.0
+offset_right = 31.5
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_x7p8l")
+theme_override_font_sizes/font_size = 10
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -17,10 +17,15 @@ texture = ExtResource("1_fcwad")
 3:0/0 = 0
 3:0/0/custom_data_0 = "foest"
 3:0/0/custom_data_1 = 2
+3:0/0/custom_data_3 = 20
 
 [resource]
 custom_data_layer_0/name = "type"
 custom_data_layer_0/type = 4
 custom_data_layer_1/name = "move_cost"
 custom_data_layer_1/type = 2
+custom_data_layer_2/name = "def"
+custom_data_layer_2/type = 2
+custom_data_layer_3/name = "avo"
+custom_data_layer_3/type = 2
 sources/0 = SubResource("TileSetAtlasSource_kldst")

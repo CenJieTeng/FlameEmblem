@@ -3,8 +3,12 @@ extends Control
 @onready var name_node = $Panel/Name
 @onready var hp_label = $Panel/HP
 @onready var hp_progress = $Panel/HealthBackground/ProgressBar
+@onready var head_image = $Panel/TextureRect
 
 func update_info(unit: Unit):
+	var atlas = head_image.texture as AtlasTexture
+	atlas.atlas = unit.head_texture
+	head_image.texture = atlas
 	name_node.text = unit.unit_name
 	var max_hp = unit.stats["max_hp"];
 	var hp = unit.stats["hp"];

@@ -29,6 +29,8 @@ var game_manager : GameManager
 var grid_map : CustomGridMap
 var animator : AnimatedSprite2D
 
+var head_texture : Texture
+
 func _ready() -> void:
 	game_manager = get_node("/root/Node2D")
 	grid_map = get_node("/root/Node2D/Map")
@@ -45,6 +47,8 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	position = grid_map.grid_to_world(grid_position)
 	animator.sprite_frames = load("res://Sprites/Animation/UnitSpriteFrames/Lord.tres").duplicate(true)
 	
+	head_texture = load(Global.name_to_unit_sprite_frames_map[unit_name][0])
+	
 	# 创建待机动画
 	create_idle_anim()
 
@@ -54,7 +58,7 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	animator.play("idle")
 	
 func create_idle_anim():
-	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][0])
+	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][1])
 	var atlas1 = AtlasTexture.new()
 	atlas1.atlas = tex
 	atlas1.region = Rect2(0, 0, 64, 48)
@@ -74,7 +78,7 @@ func create_idle_anim():
 	animator.sprite_frames.set_frame("idle", 4, atlas1)
 	
 func create_move_anim():
-	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][1])
+	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][2])
 	var offsety = -11
 	for i in range(4):
 		var atlas = AtlasTexture.new()

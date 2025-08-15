@@ -1,8 +1,15 @@
 extends Node2D
 
 var name_to_unit_sprite_frames_map = {
-	"角色1" : ["res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF.png", "res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF_move.png"],
-	"敌人1" : ["res://Sprites/Characters/MapSprites/Hero/enemyHeroM.png", "res://Sprites/Characters/MapSprites/Hero/enemyHeroM_move.png"],
+	"角色1" : ["res://Sprites/Characters/PlayerCharacters/EirikaPortrait.png", "res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF.png", "res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF_move.png"],
+	"敌人1" : ["res://Sprites/Characters/PlayerCharacters/FordePortrait.png", "res://Sprites/Characters/MapSprites/Hero/enemyHeroM.png", "res://Sprites/Characters/MapSprites/Hero/enemyHeroM_move.png"],
+}
+
+var terrain_type_to_name_map = {
+	"plain" : "平原",
+	"foest" : "森林",
+	"mountain" : "山脉",
+	"sea" : "海",
 }
 
 func _ready() -> void:

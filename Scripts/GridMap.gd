@@ -17,7 +17,9 @@ func load_terrain_data():
 		if data:
 			var type = data.get_custom_data("type")
 			var move_cost = data.get_custom_data("move_cost")
-			terrain_data[cell] = TerrainData.new(type, move_cost)
+			var def = data.get_custom_data("def")
+			var avo = data.get_custom_data("avo")
+			terrain_data[cell] = TerrainData.new(type, move_cost, def, avo)
 		else:
 			print("找不到地图自定义数据 ", cell)
 	print("地形数据加载完成")
@@ -38,6 +40,13 @@ func is_grid_in_map(grid: Vector2i) -> bool:
 	if grid.x < 0 || grid.y < 0 || grid.x >= map_size.x || grid.y >= map_size.y :
 		return false
 	return true
+	
+# 网格坐标相对于地图中心点的偏移单位向量
+func get_direction_to_center_from_grid(grid: Vector2i) -> Vector2:
+	var center := map_size / 2
+	var offset: Vector2 = grid - center
+	return offset.normalized()
+
 
 func create_moveable_sprites(grid_list: Array[Vector2i]):
 	for grid in grid_list:
@@ -64,3 +73,5 @@ func _create_attackable_sprite(grid: Vector2i):
 func clear_moveable_sprites():
 	for child in move_layer.get_children():
 		child.queue_free()
+		
+		
