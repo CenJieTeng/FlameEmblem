@@ -5,8 +5,9 @@ class_name GameManager
 @export var move_path_layer : TileMapLayer
 @export var unit_menu : Control
 @onready var unit_info_ui : Control = $CanvasLayer/UnitInfo
-@onready var unit_fight_info_ui  : Control = $CanvasLayer/UnitInfoUI
-@onready var terrain_info_ui  : Control = $CanvasLayer/TerrainInfoUI
+@onready var unit_fight_info_ui : Control = $CanvasLayer/UnitInfoUI
+@onready var terrain_info_ui : Control = $CanvasLayer/TerrainInfoUI
+@onready var wave_info_ui : Control = $CanvasLayer/WaveInfoUI
 @export var cursor : Cursor
 
 var cursor_dir : Vector2
@@ -21,7 +22,7 @@ var move_path_gold_sprite : Sprite2D
 var unit_command_list : Array[UnitCommand] = []
 
 # 回合相关
-var wave_count = 0
+var wave_count = 1
 var wave_camp : Array[Unit.UnitCamp] = [Unit.UnitCamp.PLAYER, Unit.UnitCamp.ENEMY]
 var current_wave_camp : Unit.UnitCamp = Unit.UnitCamp.PLAYER
 
@@ -76,6 +77,8 @@ func _ready() -> void:
 	
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
 	default_font_size = 10
+	wave_info_ui.init(12, "胜利")
+	wave_info_ui.set_wave(1)
 
 	check_hud_state()
 
@@ -125,7 +128,7 @@ func _on_unit_signal(unit: Unit, action: String):
 
 func _on_cursor_pos_change():
 	cursor_dir = grid_map.get_direction_to_center_from_grid(cursor.pos)
-	print("偏移向量: ", "左" if cursor_dir.x < 0 else "右", "上" if cursor_dir.y < 0 else "下");
+	#print("偏移向量: ", "左" if cursor_dir.x < 0 else "右", "上" if cursor_dir.y < 0 else "下");
 	
 	if current_unit and play_state == PlayState.SELECT_UNIT:
 		current_unit.calc_move_path(cursor.pos)
@@ -258,6 +261,7 @@ func wave_finish():
 	current_unit = null
 	current_wave_camp = wave_camp[(current_wave_camp + 1) % wave_camp.size()]
 	wave_count += 1
+	wave_info_ui.set_wave(int(ceil(float(wave_count) / wave_camp.size())))
 
 	if current_wave_camp == Unit.UnitCamp.PLAYER:
 		game_state = GameState.WAITING_FOR_PLAYER
@@ -302,8 +306,9 @@ func show_menu():
 func check_hud_state():
 	unit_info_ui.visible = false
 	terrain_info_ui.visible = false
+	wave_info_ui.visible = false
 	var ui_slot_list : Array[int]
-	if game_state == GameState.WAITING_FOR_PLAYER:
+	if game_state == GameState.WAITING_FOR_PLAYER:	
 		if play_state == PlayState.NONE:
 			var unit = get_unit_by_grid(cursor.pos)
 			if unit:
@@ -315,14 +320,23 @@ func check_hud_state():
 				else:
 					unit_info_ui.set_position(Vector2(5, 5))
 					ui_slot_list.append(1)
+					
 			var terrain_data = grid_map.get_terrain_data(cursor.pos)
 			if terrain_data:
 				terrain_info_ui.visible = true
 				terrain_info_ui.update_info(terrain_data)
 				if cursor_dir.x < 0 or ui_slot_list.has(3):
 					terrain_info_ui.set_position(Vector2(window_size.x - 40, window_size.y - 40))
+					ui_slot_list.append(4)
 				else:
 					terrain_info_ui.set_position(Vector2(5, window_size.y - 40))
+					ui_slot_list.append(3)
+					
+			wave_info_ui.visible = true
+			if cursor_dir.y > 0 or ui_slot_list.has(4):
+				wave_info_ui.set_position(Vector2(window_size.x - 85  * 0.8, 5))
+			else:
+				wave_info_ui.set_position(Vector2(window_size.x - 85 * 0.8, window_size.y - 45))
 		
 func select_menu_item(index: int):
 	match index:
