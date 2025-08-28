@@ -11,8 +11,8 @@ var unit_name : String = "名称"
 var stats=  {
 	"max_hp": 20,
 	"hp": 20,
-	"atk": 8,
-	"def": 4,
+	"atk": 12,
+	"def": 2,
 	"mov": 7  # 移动力
 }
 var camp = UnitCamp.PLAYER
@@ -56,6 +56,9 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	create_move_anim()
 	
 	animator.play("idle")
+	
+func is_alive():
+	return stats["hp"] > 0
 	
 func create_idle_anim():
 	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][1])

@@ -117,14 +117,13 @@ func _on_unit_signal(unit: Unit, action: String):
 	else:
 		game_state = GameState.WAITING_FOR_AI
 
-	if unit:
-		if action == "move_complate":
-			update_unit_pos_map()
-			show_menu()
-		if action == "standby":
-			check_wave_finish()
-			if current_wave_camp == Unit.UnitCamp.PLAYER:
-				play_state = PlayState.NONE
+	if action == "move_complate":
+		update_unit_pos_map()
+		show_menu()
+	if action == "standby" or action == "die":
+		check_wave_finish()
+		if current_wave_camp == Unit.UnitCamp.PLAYER:
+			play_state = PlayState.NONE
 
 func _on_cursor_pos_change():
 	cursor_dir = grid_map.get_direction_to_center_from_grid(cursor.pos)
@@ -140,7 +139,6 @@ func _on_cursor_pos_change():
 		create_move_path_sprite(current_unit.move_path)
 
 	check_hud_state()
-	
 
 func handle_input() -> UnitCommand:
 	match play_state:
@@ -333,10 +331,11 @@ func check_hud_state():
 					ui_slot_list.append(3)
 					
 			wave_info_ui.visible = true
+			var wave_info_scale = 0.8
 			if cursor_dir.y > 0 or ui_slot_list.has(4):
-				wave_info_ui.set_position(Vector2(window_size.x - 85  * 0.8, 5))
+				wave_info_ui.set_position(Vector2(window_size.x - 85  * wave_info_scale, 5 * wave_info_scale))
 			else:
-				wave_info_ui.set_position(Vector2(window_size.x - 85 * 0.8, window_size.y - 45))
+				wave_info_ui.set_position(Vector2(window_size.x - 85 * wave_info_scale, window_size.y - 45 * wave_info_scale))
 		
 func select_menu_item(index: int):
 	match index:
@@ -417,6 +416,17 @@ func attack_anim(attack_unit: Unit, target_unit: Unit):
 	await tween.finished
 
 	attack_unit.animator.play("idle")
+	
+	if target_unit.stats["hp"] <= 0:
+		print(target_unit.unit_name, " 死亡")
+		tween = create_tween()
+		tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 0), tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		get_tree().create_timer(1).timeout.connect(func():
+			_on_unit_signal(target_unit, "die")
+			unit_list.erase(target_unit)
+			target_unit.queue_free()
+			update_unit_pos_map()
+		)
 
 	attack_unit.z_index = attack_z_index
 	target_unit.z_index = target_z_index
@@ -434,12 +444,12 @@ func fight(attack_unit: Unit, target_unit: Unit):
 	else:
 		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y / 5)
 
-
 	# 等待攻击动画播放结束
 	await attack_anim(attack_unit, target_unit)
 	unit_fight_info_ui.update_info(attack_unit, target_unit)
-	await attack_anim(target_unit, attack_unit)
-	unit_fight_info_ui.update_info(attack_unit, target_unit)
+	if target_unit.is_alive():
+		await attack_anim(target_unit, attack_unit)
+		unit_fight_info_ui.update_info(attack_unit, target_unit)
 
 	unit_menu.visible = false
 	current_unit = null
@@ -448,4 +458,5 @@ func fight(attack_unit: Unit, target_unit: Unit):
 	await get_tree().create_timer(1).timeout
 	unit_fight_info_ui.visible = false
 	
-	push_command(UnitStandbyCommand.new(attack_unit))
+	if attack_unit:
+		push_command(UnitStandbyCommand.new(attack_unit))
