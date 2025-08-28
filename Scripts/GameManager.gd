@@ -23,13 +23,15 @@ var unit_command_list : Array[UnitCommand] = []
 
 # 回合相关
 var wave_count = 1
+var max_wave = 3
 var wave_camp : Array[Unit.UnitCamp] = [Unit.UnitCamp.PLAYER, Unit.UnitCamp.ENEMY]
 var current_wave_camp : Unit.UnitCamp = Unit.UnitCamp.PLAYER
 
 enum GameState{
 	WAITING_FOR_PLAYER,
 	WAITING_FOR_AI,
-	GAME_RUNING
+	GAME_RUNING,
+	GAME_FINISH
 }
 var game_state := GameState.WAITING_FOR_PLAYER:
 	set(value):
@@ -68,16 +70,15 @@ var enemy_unit : Unit
 func _ready() -> void:
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
 	create_unit("角色1", Vector2i(3, 4), Unit.UnitCamp.PLAYER)
-	create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
-	create_unit("敌人1", Vector2i(3, 5), Unit.UnitCamp.ENEMY)
-	create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
-	enemy_unit = create_unit("敌人1", Vector2i(8, 4), Unit.UnitCamp.ENEMY)
+	#create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
+	#create_unit("敌人1", Vector2i(3, 5), Unit.UnitCamp.ENEMY)
+	enemy_unit = create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
 	cursor.connect("pos_change", _on_cursor_pos_change)
 	cursor.set_pos2(Vector2i(3, 4))
 	
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
 	default_font_size = 10
-	wave_info_ui.init(12, "胜利")
+	wave_info_ui.init(max_wave, "胜利")
 	wave_info_ui.set_wave(1)
 
 	check_hud_state()
@@ -121,6 +122,9 @@ func _on_unit_signal(unit: Unit, action: String):
 		update_unit_pos_map()
 		show_menu()
 	if action == "standby" or action == "die":
+		check_game_win_or_lose()
+		if game_state == GameState.GAME_FINISH:
+			return
 		check_wave_finish()
 		if current_wave_camp == Unit.UnitCamp.PLAYER:
 			play_state = PlayState.NONE
@@ -247,7 +251,29 @@ func get_unit_by_grid(grid: Vector2i) -> Unit:
 	if pos_to_unit_map.has(grid):
 		return pos_to_unit_map[grid]
 	return null
-	
+
+func check_game_win_or_lose():
+	if wave_count > max_wave * wave_camp.size():
+		print("玩家失败")
+		game_state = GameState.GAME_FINISH
+		return
+
+	var player_count = 0
+	var enemy_count = 0
+	for unit in unit_list:
+		if unit.camp == Unit.UnitCamp.PLAYER:
+			player_count += 1
+		else:
+			enemy_count += 1
+	if player_count == 0:
+		print("玩家失败")
+		game_state = GameState.GAME_FINISH
+		return
+	if enemy_count == 0:
+		print("玩家胜利")
+		game_state = GameState.GAME_FINISH
+		return
+
 func check_wave_finish():
 	for unit in unit_list:
 		if unit.camp == current_wave_camp and not unit.is_standby:
@@ -260,6 +286,10 @@ func wave_finish():
 	current_wave_camp = wave_camp[(current_wave_camp + 1) % wave_camp.size()]
 	wave_count += 1
 	wave_info_ui.set_wave(int(ceil(float(wave_count) / wave_camp.size())))
+
+	check_game_win_or_lose()
+	if game_state == GameState.GAME_FINISH:
+		return
 
 	if current_wave_camp == Unit.UnitCamp.PLAYER:
 		game_state = GameState.WAITING_FOR_PLAYER
@@ -422,7 +452,7 @@ func attack_anim(attack_unit: Unit, target_unit: Unit):
 		tween = create_tween()
 		tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 0), tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		get_tree().create_timer(1).timeout.connect(func():
-			_on_unit_signal(target_unit, "die")
+			emit_signal("unit_signal", target_unit, "die")
 			unit_list.erase(target_unit)
 			target_unit.queue_free()
 			update_unit_pos_map()
