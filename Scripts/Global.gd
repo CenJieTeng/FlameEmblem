@@ -1,6 +1,6 @@
 extends Node2D
 
-var name_to_unit_sprite_frames_map = {
+var name_to_unit_sprite_frames_map := {
 	"角色1" : ["res://Sprites/Characters/PlayerCharacters/EirikaPortrait.png", "res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF.png", "res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF_move.png"],
 	"敌人1" : ["res://Sprites/Characters/PlayerCharacters/FordePortrait.png", "res://Sprites/Characters/MapSprites/Hero/enemyHeroM.png", "res://Sprites/Characters/MapSprites/Hero/enemyHeroM_move.png"],
 }

@@ -8,6 +8,7 @@ class_name GameManager
 @onready var unit_fight_info_ui : Control = $CanvasLayer/UnitInfoUI
 @onready var terrain_info_ui : Control = $CanvasLayer/TerrainInfoUI
 @onready var wave_info_ui : Control = $CanvasLayer/WaveInfoUI
+@onready var console_ui : Control = $CanvasLayer/Console
 @export var cursor : Cursor
 
 var cursor_dir : Vector2
@@ -86,6 +87,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	queue_redraw()
 	
+	if console_ui.visible:
+		return
+		
 	var command : UnitCommand = null
 	match game_state:
 		GameState.WAITING_FOR_PLAYER:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://c1d6gaawjlytv"]
+[gd_scene load_steps=17 format=4 uid="uid://c1d6gaawjlytv"]
 
 [ext_resource type="Script" uid="uid://dnrjunkk0fm1g" path="res://Scripts/GameManager.gd" id="1_d4mhe"]
 [ext_resource type="Script" uid="uid://ojvl5sac0t75" path="res://Scripts/GridMap.gd" id="2_5jvun"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://bwoja86ve351j" path="res://Scenes/UI/UnitInfoUI.tscn" id="10_f6hth"]
 [ext_resource type="PackedScene" uid="uid://bv4t4e4mwiaro" path="res://Scenes/UI/TerrainInfoUI.tscn" id="10_vxeyo"]
 [ext_resource type="PackedScene" uid="uid://drs0bipi241lo" path="res://Scenes/UI/WaveInfoUI.tscn" id="11_5mmm2"]
+[ext_resource type="PackedScene" uid="uid://c4h43dvvgs6uo" path="res://Scenes/UI/ConsoleUI.tscn" id="12_gpe1l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uwe06"]
 texture = ExtResource("5_5jvun")
@@ -103,6 +104,9 @@ offset_right = 187.0
 offset_bottom = 109.0
 
 [node name="WaveInfoUI" parent="CanvasLayer" instance=ExtResource("11_5mmm2")]
+visible = false
+
+[node name="Console" parent="CanvasLayer" instance=ExtResource("12_gpe1l")]
 visible = false
 
 [node name="Cursor" type="Node2D" parent="."]

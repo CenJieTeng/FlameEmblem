@@ -7,17 +7,22 @@ var anim : AnimatedSprite2D
 var timer : Timer
 var grid_map : CustomGridMap
 var game_manager : GameManager
+var console_ui : Control
 
 func _ready() -> void:
 	game_manager = get_node("/root/Node2D")
 	grid_map = get_node("/root/Node2D/Map")
 	anim = get_node("AnimatedSprite2D")
 	timer = get_node("Timer")
+	console_ui = get_node("/root/Node2D/CanvasLayer/Console")
 	anim.play()
 	
 	add_user_signal("pos_change")
 
 func _process(_delta: float) -> void:
+	if console_ui.visible:
+		return
+	
 	if (game_manager.game_state != GameManager.GameState.WAITING_FOR_PLAYER
 		or game_manager.play_state == GameManager.PlayState.SELECT_ACTION):
 		if move_dir != Vector2i.ZERO:
