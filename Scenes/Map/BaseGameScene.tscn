@@ -1,22 +1,22 @@
 [gd_scene load_steps=17 format=4 uid="uid://c1d6gaawjlytv"]
 
-[ext_resource type="Script" uid="uid://dnrjunkk0fm1g" path="res://Scripts/GameManager.gd" id="1_d4mhe"]
-[ext_resource type="Script" uid="uid://ojvl5sac0t75" path="res://Scripts/GridMap.gd" id="2_5jvun"]
-[ext_resource type="Texture2D" uid="uid://byafp8yvtsl6b" path="res://Sprites/Background/ch1.png" id="3_uwe06"]
-[ext_resource type="TileSet" uid="uid://v8v871e5jfgw" path="res://Sprites/TileSet/Terrain.tres" id="4_iax3i"]
-[ext_resource type="Texture2D" uid="uid://bdou08viywdqn" path="res://Sprites/Highlights/BlueHighlight.png" id="5_5jvun"]
-[ext_resource type="TileSet" uid="uid://ddl3eypiawigf" path="res://Sprites/TileSet/MovementArrows.tres" id="6_uwe06"]
-[ext_resource type="PackedScene" uid="uid://doiltvx600bgw" path="res://Scenes/UI/UnitMenu.tscn" id="7_iax3i"]
-[ext_resource type="Script" uid="uid://d0wie4uchncx" path="res://Scripts/Cursor.gd" id="8_n557l"]
-[ext_resource type="PackedScene" uid="uid://bguw15878n0a2" path="res://Scenes/UI/UnitFightInfoUI.tscn" id="9_62lm8"]
-[ext_resource type="SpriteFrames" uid="uid://dwt8du8lawfke" path="res://Sprites/Animation/Cursor.tres" id="9_vq7xy"]
-[ext_resource type="PackedScene" uid="uid://bwoja86ve351j" path="res://Scenes/UI/UnitInfoUI.tscn" id="10_f6hth"]
-[ext_resource type="PackedScene" uid="uid://bv4t4e4mwiaro" path="res://Scenes/UI/TerrainInfoUI.tscn" id="10_vxeyo"]
-[ext_resource type="PackedScene" uid="uid://drs0bipi241lo" path="res://Scenes/UI/WaveInfoUI.tscn" id="11_5mmm2"]
-[ext_resource type="PackedScene" uid="uid://c4h43dvvgs6uo" path="res://Scenes/UI/ConsoleUI.tscn" id="12_gpe1l"]
+[ext_resource type="Script" uid="uid://dnrjunkk0fm1g" path="res://Scripts/GameManager.gd" id="1_tcvln"]
+[ext_resource type="Script" uid="uid://ojvl5sac0t75" path="res://Scripts/GridMap.gd" id="2_1vqus"]
+[ext_resource type="Texture2D" uid="uid://byafp8yvtsl6b" path="res://Sprites/Background/ch1.png" id="3_4ibmp"]
+[ext_resource type="TileSet" uid="uid://v8v871e5jfgw" path="res://Sprites/TileSet/Terrain.tres" id="4_gnp58"]
+[ext_resource type="Texture2D" uid="uid://bdou08viywdqn" path="res://Sprites/Highlights/BlueHighlight.png" id="5_ygf2a"]
+[ext_resource type="TileSet" uid="uid://ddl3eypiawigf" path="res://Sprites/TileSet/MovementArrows.tres" id="6_xql8f"]
+[ext_resource type="PackedScene" uid="uid://doiltvx600bgw" path="res://Scenes/UI/UnitMenu.tscn" id="7_c0txr"]
+[ext_resource type="PackedScene" uid="uid://bwoja86ve351j" path="res://Scenes/UI/UnitInfoUI.tscn" id="8_lnt5q"]
+[ext_resource type="PackedScene" uid="uid://bguw15878n0a2" path="res://Scenes/UI/UnitFightInfoUI.tscn" id="9_1qr55"]
+[ext_resource type="PackedScene" uid="uid://bv4t4e4mwiaro" path="res://Scenes/UI/TerrainInfoUI.tscn" id="10_f5cuh"]
+[ext_resource type="PackedScene" uid="uid://drs0bipi241lo" path="res://Scenes/UI/WaveInfoUI.tscn" id="11_l1efd"]
+[ext_resource type="PackedScene" uid="uid://c4h43dvvgs6uo" path="res://Scenes/UI/ConsoleUI.tscn" id="12_4ghxk"]
+[ext_resource type="Script" uid="uid://d0wie4uchncx" path="res://Scripts/Cursor.gd" id="13_6m051"]
+[ext_resource type="SpriteFrames" uid="uid://dwt8du8lawfke" path="res://Sprites/Animation/Cursor.tres" id="14_3ekuk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uwe06"]
-texture = ExtResource("5_5jvun")
+texture = ExtResource("5_ygf2a")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -39,7 +39,7 @@ sources/0 = SubResource("TileSetAtlasSource_uwe06")
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("grid_map", "move_path_layer", "unit_menu", "cursor")]
 z_index = 1
-script = ExtResource("1_d4mhe")
+script = ExtResource("1_tcvln")
 grid_map = NodePath("Map")
 move_path_layer = NodePath("Map/MovePathLayer")
 unit_menu = NodePath("CanvasLayer/UnitMenu")
@@ -50,7 +50,7 @@ offset = Vector2(120, 80)
 
 [node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("terrain_layer", "move_layer", "unit_layer")]
 z_as_relative = false
-script = ExtResource("2_5jvun")
+script = ExtResource("2_1vqus")
 terrain_layer = NodePath("TerrainLayer")
 move_layer = NodePath("MoveLayer")
 unit_layer = NodePath("UnitLayer")
@@ -58,37 +58,37 @@ map_size = Vector2i(15, 10)
 
 [node name="Background" type="Sprite2D" parent="Map"]
 position = Vector2(120, 80)
-texture = ExtResource("3_uwe06")
+texture = ExtResource("3_4ibmp")
 metadata/_edit_lock_ = true
 
 [node name="TerrainLayer" type="TileMapLayer" parent="Map"]
 visible = false
 modulate = Color(1, 1, 1, 0.784314)
 tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAANAAAAAAABAAAAAAAOAAAAAAABAAAAAAAOAAEAAAABAAAAAAAOAAIAAAACAAAAAAAOAAMAAAABAAAAAAAOAAQAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAANAAYAAAAAAAAAAAANAAcAAAAAAAAAAAANAAgAAAAAAAAAAAANAAkAAAAAAAAAAAAOAAgAAAAAAAAAAAAOAAcAAAAAAAAAAAAOAAkAAAAAAAAAAAAMAAkAAAAAAAAAAAALAAkAAAAAAAAAAAAKAAkAAAAAAAAAAAAJAAkAAAABAAAAAAAIAAkAAAABAAAAAAAHAAkAAAABAAAAAAAGAAkAAAABAAAAAAAFAAkAAAABAAAAAAAEAAkAAAABAAAAAAADAAkAAAABAAAAAAACAAkAAAAAAAAAAAABAAkAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAcAAAABAAAAAAAAAAYAAAABAAAAAAAAAAMAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAQAAAABAAAAAAAAAAUAAAABAAAAAAAEAAgAAAABAAAAAAAFAAgAAAABAAAAAAAFAAcAAAABAAAAAAAGAAcAAAABAAAAAAAGAAgAAAABAAAAAAAHAAgAAAABAAAAAAAEAAAAAAABAAAAAAAEAAEAAAABAAAAAAAFAAIAAAABAAAAAAAFAAMAAAABAAAAAAAGAAMAAAABAAAAAAAJAAQAAAABAAAAAAAKAAMAAAABAAAAAAAKAAIAAAABAAAAAAALAAMAAAABAAAAAAAMAAQAAAABAAAAAAANAAQAAAABAAAAAAAJAAEAAAABAAAAAAAIAAAAAAABAAAAAAAMAAAAAAABAAAAAAANAAEAAAABAAAAAAAMAAMAAAACAAAAAAANAAMAAAACAAAAAAANAAIAAAACAAAAAAAMAAIAAAACAAAAAAALAAIAAAACAAAAAAALAAEAAAACAAAAAAAMAAEAAAACAAAAAAAKAAEAAAACAAAAAAAKAAAAAAACAAAAAAALAAAAAAACAAAAAAAJAAAAAAACAAAAAAADAAYAAAAAAAAAAAADAAUAAAAAAAAAAAADAAQAAAAAAAAAAAADAAMAAAAAAAAAAAADAAIAAAAAAAAAAAADAAEAAAABAAAAAAADAAAAAAABAAAAAAACAAAAAAABAAAAAAABAAAAAAABAAAAAAABAAEAAAABAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAAAAAABAAQAAAAAAAAAAAABAAUAAAADAAAAAAABAAYAAAAAAAAAAAABAAcAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAACAAcAAAAAAAAAAAACAAYAAAAAAAAAAAACAAUAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAACAAIAAAAAAAAAAAACAAEAAAABAAAAAAADAAcAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAcAAAAAAAAAAAAEAAYAAAAAAAAAAAAEAAUAAAAAAAAAAAAEAAQAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAQAAAAAAAAAAAAFAAUAAAAAAAAAAAAFAAYAAAADAAAAAAAGAAYAAAAAAAAAAAAGAAUAAAAAAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAAAAAAAAAHAAMAAAAAAAAAAAAHAAIAAAAAAAAAAAAHAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAAIAAEAAAADAAAAAAAIAAIAAAAAAAAAAAAIAAMAAAAAAAAAAAAIAAQAAAAAAAAAAAAIAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAHAAYAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAALAAUAAAADAAAAAAALAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAAKAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAJAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAMAAgAAAAAAAAAAAAJAAMAAAAAAAAAAAAJAAIAAAAAAAAAAAA=")
-tile_set = ExtResource("4_iax3i")
+tile_set = ExtResource("4_gnp58")
 metadata/_edit_lock_ = true
 
 [node name="MoveLayer" type="TileMapLayer" parent="Map"]
 tile_set = SubResource("TileSet_kldst")
 
 [node name="MovePathLayer" type="TileMapLayer" parent="Map"]
-tile_set = ExtResource("6_uwe06")
+tile_set = ExtResource("6_xql8f")
 
 [node name="UnitLayer" type="TileMapLayer" parent="Map"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="UnitMenu" parent="CanvasLayer" instance=ExtResource("7_iax3i")]
+[node name="UnitMenu" parent="CanvasLayer" instance=ExtResource("7_c0txr")]
 visible = false
 offset_left = 164.0
 offset_top = 52.0
 offset_right = 164.0
 offset_bottom = 52.0
 
-[node name="UnitInfo" parent="CanvasLayer" instance=ExtResource("10_f6hth")]
+[node name="UnitInfo" parent="CanvasLayer" instance=ExtResource("8_lnt5q")]
 visible = false
 
-[node name="UnitInfoUI" parent="CanvasLayer" instance=ExtResource("9_62lm8")]
+[node name="UnitInfoUI" parent="CanvasLayer" instance=ExtResource("9_1qr55")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -96,24 +96,24 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 
-[node name="TerrainInfoUI" parent="CanvasLayer" instance=ExtResource("10_vxeyo")]
+[node name="TerrainInfoUI" parent="CanvasLayer" instance=ExtResource("10_f5cuh")]
 visible = false
 offset_left = 187.0
 offset_top = 109.0
 offset_right = 187.0
 offset_bottom = 109.0
 
-[node name="WaveInfoUI" parent="CanvasLayer" instance=ExtResource("11_5mmm2")]
+[node name="WaveInfoUI" parent="CanvasLayer" instance=ExtResource("11_l1efd")]
 visible = false
 
-[node name="Console" parent="CanvasLayer" instance=ExtResource("12_gpe1l")]
+[node name="Console" parent="CanvasLayer" instance=ExtResource("12_4ghxk")]
 visible = false
 
 [node name="Cursor" type="Node2D" parent="."]
-script = ExtResource("8_n557l")
+script = ExtResource("13_6m051")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Cursor"]
-sprite_frames = ExtResource("9_vq7xy")
+sprite_frames = ExtResource("14_3ekuk")
 offset = Vector2(-0.5, 1)
 
 [node name="Timer" type="Timer" parent="Cursor"]

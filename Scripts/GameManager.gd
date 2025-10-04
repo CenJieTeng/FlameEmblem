@@ -21,6 +21,7 @@ var current_unit : Unit
 var movement_arrow_tilest : TileSet
 var move_path_gold_sprite : Sprite2D
 var unit_command_list : Array[UnitCommand] = []
+var select_unit_index = 0
 
 # 回合相关
 var wave_count = 1
@@ -70,8 +71,9 @@ var enemy_unit : Unit
 
 func _ready() -> void:
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
+	#create_unit("角色1", Vector2i(3, 12), Unit.UnitCamp.PLAYER)
 	create_unit("角色1", Vector2i(3, 4), Unit.UnitCamp.PLAYER)
-	#create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
+	create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
 	#create_unit("敌人1", Vector2i(3, 5), Unit.UnitCamp.ENEMY)
 	enemy_unit = create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
 	cursor.connect("pos_change", _on_cursor_pos_change)
@@ -135,6 +137,7 @@ func _on_unit_signal(unit: Unit, action: String):
 
 func _on_cursor_pos_change():
 	cursor_dir = grid_map.get_direction_to_center_from_grid(cursor.pos)
+	#print(cursor.pos)
 	#print("偏移向量: ", "左" if cursor_dir.x < 0 else "右", "上" if cursor_dir.y < 0 else "下");
 	
 	if current_unit and play_state == PlayState.SELECT_UNIT:
@@ -154,6 +157,14 @@ func handle_input() -> UnitCommand:
 			if Input.is_action_just_pressed("mouse_left"):
 				var unit = get_unit_by_grid(cursor.pos)
 				select_unit(unit)
+			if Input.is_action_just_pressed("RB"):
+				for i in range(unit_list.size()):
+					var next_select_index = (select_unit_index + i + 1) % unit_list.size()
+					var unit = unit_list[next_select_index]
+					if unit.camp == Unit.UnitCamp.PLAYER and not unit.is_standby:
+						cursor.set_pos2(unit.grid_position)
+						select_unit_index = next_select_index
+						break
 		PlayState.SELECT_UNIT:
 			if Input.is_action_just_pressed("mouse_left"):
 				if cursor.pos == current_unit.grid_position:
