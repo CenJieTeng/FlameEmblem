@@ -32,7 +32,7 @@ var animator : AnimatedSprite2D
 var head_texture : Texture
 
 func _ready() -> void:
-	game_manager = get_node("/root/Node2D")
+	game_manager = get_node("/root/Node2D/GameManager")
 	grid_map = get_node("/root/Node2D/Map")
 	animator = get_node("AnimatedSprite2D")
 	

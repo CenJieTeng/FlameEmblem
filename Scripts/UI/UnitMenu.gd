@@ -8,7 +8,7 @@ var item_count := 3
 var game_manager : GameManager
 
 func _ready() -> void:
-	game_manager = get_node("/root/Node2D")
+	game_manager = get_node("/root/Node2D/GameManager")
 
 func show_ui():
 	await get_tree().process_frame

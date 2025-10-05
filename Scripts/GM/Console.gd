@@ -7,7 +7,7 @@ var game_manager : GameManager
 
 func _ready() -> void:
 	input_field.text_submitted.connect(_on_command_submitted)
-	game_manager = get_node("/root/Node2D")
+	game_manager = get_node("/root/Node2D/GameManager")
 	
 func _input(event):
 	if event.is_action_pressed("toggle_console"):

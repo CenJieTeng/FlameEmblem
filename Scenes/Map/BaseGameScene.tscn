@@ -37,13 +37,8 @@ texture = ExtResource("5_ygf2a")
 [sub_resource type="TileSet" id="TileSet_kldst"]
 sources/0 = SubResource("TileSetAtlasSource_uwe06")
 
-[node name="Node2D" type="Node2D" node_paths=PackedStringArray("grid_map", "move_path_layer", "unit_menu", "cursor")]
+[node name="Node2D" type="Node2D"]
 z_index = 1
-script = ExtResource("1_tcvln")
-grid_map = NodePath("Map")
-move_path_layer = NodePath("Map/MovePathLayer")
-unit_menu = NodePath("CanvasLayer/UnitMenu")
-cursor = NodePath("Cursor")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(120, 80)
@@ -85,10 +80,10 @@ offset_top = 52.0
 offset_right = 164.0
 offset_bottom = 52.0
 
-[node name="UnitInfo" parent="CanvasLayer" instance=ExtResource("8_lnt5q")]
+[node name="UnitInfoUI" parent="CanvasLayer" instance=ExtResource("8_lnt5q")]
 visible = false
 
-[node name="UnitInfoUI" parent="CanvasLayer" instance=ExtResource("9_1qr55")]
+[node name="UnitFightInfoUI" parent="CanvasLayer" instance=ExtResource("9_1qr55")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -118,5 +113,8 @@ offset = Vector2(-0.5, 1)
 
 [node name="Timer" type="Timer" parent="Cursor"]
 wait_time = 0.1
+
+[node name="GameManager" type="Node2D" parent="."]
+script = ExtResource("1_tcvln")
 
 [connection signal="timeout" from="Cursor/Timer" to="Cursor" method="_on_timer_timeout"]

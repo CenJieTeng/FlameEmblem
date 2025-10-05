@@ -1,15 +1,15 @@
 extends Node2D
 class_name GameManager
 
-@export var grid_map : CustomGridMap
-@export var move_path_layer : TileMapLayer
-@export var unit_menu : Control
-@onready var unit_info_ui : Control = $CanvasLayer/UnitInfo
-@onready var unit_fight_info_ui : Control = $CanvasLayer/UnitInfoUI
-@onready var terrain_info_ui : Control = $CanvasLayer/TerrainInfoUI
-@onready var wave_info_ui : Control = $CanvasLayer/WaveInfoUI
-@onready var console_ui : Control = $CanvasLayer/Console
-@export var cursor : Cursor
+@onready var grid_map : CustomGridMap = $"../Map"
+@onready var move_path_layer : TileMapLayer = $"../Map/MovePathLayer"
+@onready var unit_menu : Control = $"../CanvasLayer/UnitMenu"
+@onready var unit_info_ui : Control = $"../CanvasLayer/UnitInfoUI"
+@onready var unit_fight_info_ui : Control = $"../CanvasLayer/UnitFightInfoUI"
+@onready var terrain_info_ui : Control = $"../CanvasLayer/TerrainInfoUI"
+@onready var wave_info_ui : Control = $"../CanvasLayer/WaveInfoUI"
+@onready var console_ui : Control = $"../CanvasLayer/Console"
+@onready var cursor : Cursor = $"../Cursor"
 
 var cursor_dir : Vector2
 var window_size = DisplayServer.window_get_size() / 3.2
@@ -68,22 +68,12 @@ var default_font = FontFile.new()
 var default_font_size = ThemeDB.fallback_font_size
 
 var enemy_unit : Unit
-
+ 
 func _ready() -> void:
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
-	#create_unit("角色1", Vector2i(3, 12), Unit.UnitCamp.PLAYER)
-	create_unit("角色1", Vector2i(3, 4), Unit.UnitCamp.PLAYER)
-	create_unit("角色1", Vector2i(4, 4), Unit.UnitCamp.PLAYER)
-	#create_unit("敌人1", Vector2i(3, 5), Unit.UnitCamp.ENEMY)
-	enemy_unit = create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
-	cursor.connect("pos_change", _on_cursor_pos_change)
-	cursor.set_pos2(Vector2i(3, 4))
-	
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
 	default_font_size = 10
-	wave_info_ui.init(max_wave, "胜利")
-	wave_info_ui.set_wave(1)
-
+	cursor.connect("pos_change", _on_cursor_pos_change)	
 	check_hud_state()
 
 func _process(_delta: float) -> void:
@@ -283,10 +273,12 @@ func check_game_win_or_lose():
 	if player_count == 0:
 		print("玩家失败")
 		game_state = GameState.GAME_FINISH
+		SceneManager.restart_scene()
 		return
 	if enemy_count == 0:
 		print("玩家胜利")
 		game_state = GameState.GAME_FINISH
+		SceneManager.go_to_next_level()
 		return
 
 func check_wave_finish():
@@ -467,7 +459,7 @@ func attack_anim(attack_unit: Unit, target_unit: Unit):
 		tween = create_tween()
 		tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 0), tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		get_tree().create_timer(1).timeout.connect(func():
-			emit_signal("unit_signal", target_unit, "die")
+			target_unit.emit_signal("unit_signal", target_unit, "die")
 			unit_list.erase(target_unit)
 			target_unit.queue_free()
 			update_unit_pos_map()
@@ -483,7 +475,6 @@ func fight(attack_unit: Unit, target_unit: Unit):
 	unit_fight_info_ui.visible = true
 	unit_fight_info_ui.update_info(attack_unit, target_unit)
 	
-	var window_size = DisplayServer.window_get_size() / 3.2
 	if attack_unit.position.y < window_size.y / 2:
 		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y * 4 / 5)
 	else:

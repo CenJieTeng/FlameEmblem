@@ -12,7 +12,7 @@ var camera : Camera2D
 var camera_bounds : Rect2i
 
 func _ready() -> void:
-	game_manager = get_node("/root/Node2D")
+	game_manager = get_node("/root/Node2D/GameManager")
 	grid_map = get_node("/root/Node2D/Map")
 	anim = get_node("AnimatedSprite2D")
 	timer = get_node("Timer")
