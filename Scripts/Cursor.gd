@@ -70,7 +70,13 @@ func set_pos(p_pos : Vector2i):
 	tween.tween_property(self, "position", new_position, 0.08)
 	pos = p_pos
 	if not camera_bounds.has_point(pos):
-		camera_bounds.position += move_dir
+		var bounds_move = move_dir
+		if camera_bounds.position.x + move_dir.x < 0 || camera_bounds.position.x + camera_bounds.size.x + move_dir.x > grid_map.map_size.x:
+			bounds_move.x = 0
+		if camera_bounds.position.y + move_dir.y < 0 || camera_bounds.position.y  + camera_bounds.size.y + move_dir.y > grid_map.map_size.y:
+			bounds_move.y = 0
+		#print(camera_bounds, bounds_move, move_dir)
+		camera_bounds.position += bounds_move
 		set_camera_offset()
 	emit_signal("pos_change")
 

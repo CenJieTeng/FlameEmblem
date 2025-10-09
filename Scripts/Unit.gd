@@ -9,8 +9,8 @@ enum UnitCamp
 
 var unit_name : String = "名称"
 var stats=  {
-	"max_hp": 20,
-	"hp": 20,
+	"max_hp": 10,
+	"hp": 10,
 	"atk": 12,
 	"def": 2,
 	"mov": 7  # 移动力

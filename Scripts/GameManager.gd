@@ -10,6 +10,7 @@ class_name GameManager
 @onready var wave_info_ui : Control = $"../CanvasLayer/WaveInfoUI"
 @onready var console_ui : Control = $"../CanvasLayer/Console"
 @onready var cursor : Cursor = $"../Cursor"
+@onready var level_pass_ui :  Control = $"../CanvasLayer/LevelPassUI"
 
 var cursor_dir : Vector2
 var window_size = DisplayServer.window_get_size() / 3.2
@@ -278,7 +279,8 @@ func check_game_win_or_lose():
 	if enemy_count == 0:
 		print("玩家胜利")
 		game_state = GameState.GAME_FINISH
-		SceneManager.go_to_next_level()
+		#SceneManager.go_to_next_level()
+		level_pass_ui.visible = true
 		return
 
 func check_wave_finish():
