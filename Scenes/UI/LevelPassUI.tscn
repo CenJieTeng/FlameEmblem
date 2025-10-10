@@ -10,6 +10,7 @@ anchors_preset = 0
 script = ExtResource("1_waqf2")
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 0
 offset_left = 60.0
 offset_top = 40.0
 offset_right = 180.0

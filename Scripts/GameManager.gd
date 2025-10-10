@@ -8,9 +8,7 @@ class_name GameManager
 @onready var unit_fight_info_ui : Control = $"../CanvasLayer/UnitFightInfoUI"
 @onready var terrain_info_ui : Control = $"../CanvasLayer/TerrainInfoUI"
 @onready var wave_info_ui : Control = $"../CanvasLayer/WaveInfoUI"
-@onready var console_ui : Control = $"../CanvasLayer/Console"
 @onready var cursor : Cursor = $"../Cursor"
-@onready var level_pass_ui :  Control = $"../CanvasLayer/LevelPassUI"
 
 var cursor_dir : Vector2
 var window_size = DisplayServer.window_get_size() / 3.2
@@ -71,6 +69,7 @@ var default_font_size = ThemeDB.fallback_font_size
 var enemy_unit : Unit
  
 func _ready() -> void:
+	InputManager.register_game_input_handlers(self)
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
 	default_font_size = 10
@@ -80,7 +79,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	queue_redraw()
 	
-	if console_ui.visible:
+func handle_game_input():
+	if Input.is_action_just_pressed("toggle_console"):
+		UIManager.open(UIManager.UI_NAME.CONSOLE)
 		return
 		
 	var command : UnitCommand = null
@@ -187,7 +188,7 @@ func handle_input() -> UnitCommand:
 					unit_command_list.pop_back()
 					command.undo()
 					if command is UnitMoveCommand:
-						unit_menu.visible = false
+						UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 						play_state = PlayState.SELECT_UNIT
 						select_unit(command.unit)
 						_on_cursor_pos_change()
@@ -202,11 +203,11 @@ func handle_input() -> UnitCommand:
 					move_path_layer.clear()
 					if move_path_gold_sprite: move_path_gold_sprite.queue_free()
 					grid_map.clear_moveable_sprites()
-					unit_menu.visible = false
+					UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 					play_state = PlayState.NONE
 			PlayState.SELECT_ACTION:
 				grid_map.clear_moveable_sprites()
-				unit_menu.visible = false
+				UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 				play_state = PlayState.SELECT_UNIT
 				select_unit(current_unit)
 			PlayState.SELECT_ATTACK_TARGET:
@@ -279,8 +280,7 @@ func check_game_win_or_lose():
 	if enemy_count == 0:
 		print("玩家胜利")
 		game_state = GameState.GAME_FINISH
-		#SceneManager.go_to_next_level()
-		level_pass_ui.visible = true
+		UIManager.open(UIManager.UI_NAME.LEVEL_PASS_UI)
 		return
 
 func check_wave_finish():
@@ -334,7 +334,7 @@ func create_move_path_sprite(path: Array[Vector2i]):
 func show_menu():
 	if game_state != GameState.WAITING_FOR_PLAYER:
 		return
-	unit_menu.show_ui()
+	UIManager.open(UIManager.UI_NAME.UNIT_MENU)
 	if current_unit.position.x < window_size.x / 2:
 		unit_menu.position = Vector2(window_size.x * 4 / 5, window_size.y / 3)
 	else:
@@ -385,7 +385,7 @@ func select_menu_item(index: int):
 			push_command(UnitStandbyCommand.new(current_unit))
 			current_unit = null
 			play_state = PlayState.NONE
-			unit_menu.visible = false
+			UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 
 func attack(attack_unit: Unit, target_unit: Unit):
 	var damage = attack_unit.stats["atk"] - target_unit.stats["def"]
@@ -489,7 +489,7 @@ func fight(attack_unit: Unit, target_unit: Unit):
 		await attack_anim(target_unit, attack_unit)
 		unit_fight_info_ui.update_info(attack_unit, target_unit)
 
-	unit_menu.visible = false
+	UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 	current_unit = null
 	target_unit = null
 

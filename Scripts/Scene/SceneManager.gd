@@ -1,11 +1,15 @@
 extends Node2D
 
 var cur_level = 0
+var running := false
 
 var level_path = [
 	"res://Scenes/Map/Level1.tscn",
 	"res://Scenes/Map/Level2.tscn",
 ]
+
+func _ready() -> void:
+	add_user_signal("pre_scene_change")
 
 func go_to_game_start_scene():
 	simple_fade_transition("res://Scenes/Map/GameStartScene.tscn")
@@ -27,6 +31,9 @@ func is_final_level():
 	return cur_level == level_path.size()
 	
 func simple_fade_transition(scene_path: String, fade_duration: float = 1.0):
+	if running: return
+	running = true
+	
 	# 创建临时ColorRect
 	var fade_rect = ColorRect.new()
 	fade_rect.anchor_right = 1.0
@@ -36,6 +43,8 @@ func simple_fade_transition(scene_path: String, fade_duration: float = 1.0):
 	var canvas_layer = CanvasLayer.new()
 	canvas_layer.add_child(fade_rect)
 	get_tree().root.add_child(canvas_layer)
+
+	emit_signal("pre_scene_change")
 
 	# 淡入
 	var tween = create_tween()
@@ -51,3 +60,4 @@ func simple_fade_transition(scene_path: String, fade_duration: float = 1.0):
 	await tween.finished
 
 	canvas_layer.queue_free()
+	running = false

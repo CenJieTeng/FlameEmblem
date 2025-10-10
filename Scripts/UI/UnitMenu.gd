@@ -1,4 +1,4 @@
-extends Control
+extends BaseUI
 
 var init_offset := 5
 var offset := 13
@@ -8,17 +8,23 @@ var item_count := 3
 var game_manager : GameManager
 
 func _ready() -> void:
+	super._ready()
 	game_manager = get_node("/root/Node2D/GameManager")
+	
+func get_ui_name():
+	return UIManager.UI_NAME.UNIT_MENU
+	
+func is_handle_input():
+	return true
 
-func show_ui():
-	await get_tree().process_frame
-	visible = true
+func open_ui():
+	super.open_ui()
 	index = 1
 	$TextureRect.position.y = init_offset
 
-func _process(_delta: float) -> void:
-	if not visible or game_manager.play_state != GameManager.PlayState.SELECT_ACTION:
-		return
+func handle_ui_input() -> bool:
+	if game_manager.play_state != GameManager.PlayState.SELECT_ACTION:
+		return false
 	
 	if Input.is_action_just_pressed("up"):
 		index -= 1
@@ -30,3 +36,5 @@ func _process(_delta: float) -> void:
 		$TextureRect.position.y = init_offset + offset * (index - 1)
 	if Input.is_action_just_pressed("mouse_left"):
 		game_manager.select_menu_item(index)
+		
+	return true

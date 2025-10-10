@@ -1,4 +1,4 @@
-extends Control
+extends BaseUI
 
 @onready var input_field : LineEdit = $Panel/VBoxContainer/LineEdit
 @onready var output_text : RichTextLabel = $Panel/VBoxContainer/RichTextLabel
@@ -6,15 +6,24 @@ extends Control
 var game_manager : GameManager
 
 func _ready() -> void:
+	super._ready()
 	input_field.text_submitted.connect(_on_command_submitted)
 	game_manager = get_node("/root/Node2D/GameManager")
+
+func get_ui_name():
+	return UIManager.UI_NAME.CONSOLE
 	
-func _input(event):
-	if event.is_action_pressed("toggle_console"):
-		visible = !visible
-		if visible:
-			input_field.grab_focus()
-			get_viewport().set_input_as_handled()
+func is_handle_input():
+	return true
+	
+func open_ui():
+	super.open_ui()
+	input_field.grab_focus()
+	
+func handle_ui_input() -> bool:
+	if Input.is_action_just_pressed("toggle_console"):
+		close_ui()
+	return true
 	
 func _on_command_submitted(command: String):
 	if command.strip_edges() != "":

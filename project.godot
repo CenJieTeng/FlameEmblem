@@ -19,12 +19,15 @@ config/icon="res://icon.svg"
 
 Global="*res://Scripts/Global.gd"
 SceneManager="*res://Scripts/Scene/SceneManager.gd"
+InputManager="*res://Scripts/InputManager.gd"
+UIManager="*res://Scripts/UI/UIManager.gd"
 
 [display]
 
 window/size/viewport_width=768
 window/size/viewport_height=512
 window/stretch/mode="canvas_items"
+window/stretch/aspect="ignore"
 window/stretch/scale=3.2
 window/dynamic_fonts/use_oversampling=true
 window/snap/snap_2d_transforms_to_pixel=false

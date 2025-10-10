@@ -1,8 +1,10 @@
-extends Node
+extends BaseUI
 
 @onready var button : Button = $NinePatchRect/Button
 
 func _ready() -> void:
+	super._ready()
+	
 	if SceneManager.is_final_level():
 		button.text = "返回标题"
 	
@@ -11,13 +13,19 @@ func _ready() -> void:
 			button.grab_focus()
 	)
 	button.connect("pressed", _button_pressed)
+	
+func get_ui_name():
+	return UIManager.UI_NAME.LEVEL_PASS_UI
+	
+func is_handle_input():
+	return true
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_mouse_left"):
+func handle_ui_input() -> bool:
+	if Input.is_action_just_pressed("ui_mouse_left"):
 		var focued_control = get_viewport().gui_get_focus_owner()
 		if focued_control is BaseButton:
 			focued_control.emit_signal("pressed")
-			#get_viewport().set_input_as_handled()
+	return true
 
 func _button_pressed():
 	if SceneManager.is_final_level():

@@ -12,6 +12,7 @@ var camera : Camera2D
 var camera_bounds : Rect2i
 
 func _ready() -> void:
+	InputManager.register_game_input_handlers(self)
 	game_manager = get_node("/root/Node2D/GameManager")
 	grid_map = get_node("/root/Node2D/Map")
 	anim = get_node("AnimatedSprite2D")
@@ -24,10 +25,7 @@ func _ready() -> void:
 	camera_bounds.size = Vector2i(15, 10)
 	add_user_signal("pos_change")
 
-func _process(_delta: float) -> void:
-	if console_ui.visible:
-		return
-	
+func handle_game_input():
 	if (game_manager.game_state != GameManager.GameState.WAITING_FOR_PLAYER
 		or game_manager.play_state == GameManager.PlayState.SELECT_ACTION):
 		if move_dir != Vector2i.ZERO:
