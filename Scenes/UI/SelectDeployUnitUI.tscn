@@ -1,0 +1,379 @@
+[gd_scene load_steps=13 format=3 uid="uid://d3v3tdq3k3g4p"]
+
+[ext_resource type="Texture2D" uid="uid://bbr4f2fdvcikx" path="res://Sprites/UI/MenuBackgrounds/StatusBackground.png" id="1_0chfb"]
+[ext_resource type="Texture2D" uid="uid://d3x5di24swn5j" path="res://Sprites/UI/MenuBackgrounds/DarkMenuBackground.png" id="2_sae1n"]
+[ext_resource type="Script" uid="uid://lwrocvp3rvdo" path="res://Scripts/UI/SelectDeployUnitUI.gd" id="3_ppbd4"]
+[ext_resource type="Texture2D" uid="uid://d2r7dik0xpmy7" path="res://Sprites/UI/MenuBackgrounds/NameTagMenu.png" id="3_tx48c"]
+[ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="3_uqrh2"]
+[ext_resource type="Material" uid="uid://dsnt3deoqnr82" path="res://Shader/SpriteRemoveColorGreen.tres" id="5_efcdn"]
+[ext_resource type="Texture2D" uid="uid://dd0d1hs1cu3l8" path="res://Sprites/Characters/PlayerCharacters/EirikaPortrait.png" id="5_en5nf"]
+[ext_resource type="Texture2D" uid="uid://crrstbiml7viy" path="res://Sprites/UI/MenuBackgrounds/menuHand.png" id="6_ppbd4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_efcdn"]
+atlas = ExtResource("5_en5nf")
+region = Rect2(96, 16, 32, 32)
+
+[sub_resource type="Animation" id="Animation_en5nf"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arrow/ArrowTexture:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-15, 5)]
+}
+
+[sub_resource type="Animation" id="Animation_ppbd4"]
+resource_name = "default"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Arrow/ArrowTexture:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 0.5, 0.5),
+"update": 0,
+"values": [Vector2(-15, 5), Vector2(-10, 5), Vector2(-15, 5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_efcdn"]
+_data = {
+&"RESET": SubResource("Animation_en5nf"),
+&"default": SubResource("Animation_ppbd4")
+}
+
+[node name="SelectDeployUnitUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.00018535
+script = ExtResource("3_ppbd4")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 160.0
+texture = ExtResource("1_0chfb")
+expand_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="UnitInfoPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 105.0
+offset_bottom = 125.0
+metadata/_edit_lock_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="UnitInfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_sae1n")
+region_rect = Rect2(0, 0, 24, 24)
+patch_margin_left = 5
+patch_margin_top = 3
+patch_margin_right = 5
+patch_margin_bottom = 3
+axis_stretch_vertical = 2
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="UnitInfoPanel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = 99.0
+offset_bottom = 38.0
+texture = ExtResource("3_tx48c")
+region_rect = Rect2(0, 0, 24, 24)
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="HeadTexture" type="TextureRect" parent="UnitInfoPanel/NinePatchRect2"]
+material = ExtResource("5_efcdn")
+layout_mode = 0
+offset_left = 7.00241
+offset_top = 4.99722
+offset_right = 39.0024
+offset_bottom = 36.9972
+scale = Vector2(0.85, 0.85)
+texture = SubResource("AtlasTexture_efcdn")
+
+[node name="NameLabel" type="Label" parent="UnitInfoPanel/NinePatchRect2"]
+layout_mode = 0
+offset_left = 37.0024
+offset_top = 4.99166
+offset_right = 85.0024
+offset_bottom = 18.9917
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 9
+text = "马可波罗"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelIcon" type="Label" parent="UnitInfoPanel/NinePatchRect2"]
+layout_mode = 0
+offset_left = 42.0076
+offset_top = 20.9907
+offset_right = 54.0076
+offset_bottom = 32.9907
+theme_override_colors/font_color = Color(0.972549, 0.941176, 0.533333, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 11
+text = "LV"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Level" type="Label" parent="UnitInfoPanel/NinePatchRect2"]
+layout_mode = 0
+offset_left = 55.008
+offset_top = 20.9883
+offset_right = 65.008
+offset_bottom = 34.9883
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ExpIcon" type="Label" parent="UnitInfoPanel/NinePatchRect2"]
+layout_mode = 0
+offset_left = 66.0076
+offset_top = 20.9863
+offset_right = 78.0076
+offset_bottom = 32.9863
+theme_override_colors/font_color = Color(0.972549, 0.941176, 0.533333, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 11
+text = "E"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Exp" type="Label" parent="UnitInfoPanel/NinePatchRect2"]
+layout_mode = 0
+offset_left = 76.008
+offset_top = 20.9844
+offset_right = 86.008
+offset_bottom = 34.9844
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UnitInfoPanel"]
+layout_mode = 0
+offset_left = 4.02261
+offset_top = 38.0
+offset_right = 98.0226
+offset_bottom = 117.0
+
+[node name="DeployNumPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 6.0
+offset_right = 241.0
+offset_bottom = 21.0
+metadata/_edit_lock_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="DeployNumPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_sae1n")
+region_rect = Rect2(0, 0, 24, 24)
+patch_margin_left = 5
+patch_margin_top = 3
+patch_margin_right = 5
+patch_margin_bottom = 3
+axis_stretch_vertical = 2
+
+[node name="Label" type="Label" parent="DeployNumPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -96.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 8
+text = "剩余"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LeftNum" type="Label" parent="DeployNumPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = 1.0
+offset_right = -85.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 8
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="DeployNumPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_right = -48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 8
+text = "人可以出战"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeployNum" type="Label" parent="DeployNumPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 94.0
+offset_top = 1.0
+offset_right = -7.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 10
+text = "99/99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="UnitListPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 20.0
+offset_right = 234.0
+offset_bottom = 125.0
+metadata/_edit_lock_ = true
+
+[node name="NinePatchRect" type="NinePatchRect" parent="UnitListPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_sae1n")
+region_rect = Rect2(0, 0, 24, 24)
+patch_margin_left = 5
+patch_margin_top = 3
+patch_margin_right = 5
+patch_margin_bottom = 3
+axis_stretch_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UnitListPanel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 117.0
+offset_bottom = 100.0
+
+[node name="HFlowContainer" type="HFlowContainer" parent="UnitListPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 2
+
+[node name="Arrow" type="Control" parent="UnitListPanel"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ArrowAnimationPlayer" type="AnimationPlayer" parent="UnitListPanel/Arrow"]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_efcdn")
+}
+autoplay = "default"
+
+[node name="ArrowTexture" type="TextureRect" parent="UnitListPanel/Arrow"]
+layout_mode = 0
+offset_left = -15.0
+offset_top = 5.0
+offset_right = -3.05176e-05
+offset_bottom = 17.0
+texture = ExtResource("6_ppbd4")
+
+[node name="GoalPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 128.0
+offset_right = 105.0
+offset_bottom = 158.0
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="GoalPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 10
+text = "目的: 生存"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TipsPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 128.0
+offset_right = 234.0
+offset_bottom = 158.0
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="TipsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_uqrh2")
+theme_override_font_sizes/font_size = 10
+text = "start: 战斗开始"
+horizontal_alignment = 1
+vertical_alignment = 1

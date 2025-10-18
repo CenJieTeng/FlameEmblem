@@ -21,7 +21,7 @@ func is_handle_input():
 	return true
 
 func handle_ui_input() -> bool:
-	if Input.is_action_just_pressed("ui_mouse_left"):
+	if Input.is_action_just_pressed("mouse_left"):
 		var focued_control = get_viewport().gui_get_focus_owner()
 		if focued_control is BaseButton:
 			focued_control.emit_signal("pressed")

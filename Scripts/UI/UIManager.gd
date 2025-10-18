@@ -2,9 +2,11 @@ extends Node2D
 
 enum UI_NAME
 {
+	INVALID,
 	CONSOLE,
 	UNIT_MENU,
 	LEVEL_PASS_UI,
+	SELECT_DEPLOY_UNIT_UI,
 }
 
 var ui_dict : Dictionary[UI_NAME, BaseUI]
@@ -13,7 +15,8 @@ var ui_input_handlers : Array[BaseUI]
 var ui_name_dict = {
 	UI_NAME.CONSOLE : "Console",
 	UI_NAME.UNIT_MENU : "UnitMenu",
-	UI_NAME.LEVEL_PASS_UI: "LevelPass"
+	UI_NAME.LEVEL_PASS_UI: "LevelPassUI",
+	UI_NAME.SELECT_DEPLOY_UNIT_UI: "SelectDeployUnitUI",
 }
 
 func _ready() -> void:

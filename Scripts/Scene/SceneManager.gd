@@ -3,6 +3,8 @@ extends Node2D
 var cur_level = 0
 var running := false
 
+var cur_scene : BaseScene
+
 var level_path = [
 	"res://Scenes/Map/Level1.tscn",
 	"res://Scenes/Map/Level2.tscn",
@@ -10,6 +12,12 @@ var level_path = [
 
 func _ready() -> void:
 	add_user_signal("pre_scene_change")
+
+func set_scene(scene: BaseScene):
+	cur_scene = scene
+	
+func get_scene() -> BaseScene:
+	return cur_scene
 
 func go_to_game_start_scene():
 	simple_fade_transition("res://Scenes/Map/GameStartScene.tscn")

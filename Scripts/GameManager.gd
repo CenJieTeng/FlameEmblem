@@ -11,7 +11,7 @@ class_name GameManager
 @onready var cursor : Cursor = $"../Cursor"
 
 var cursor_dir : Vector2
-var window_size = DisplayServer.window_get_size() / 3.2
+var window_size
 
 # 单位相关
 var unit_list : Array[Unit] = []
@@ -70,6 +70,7 @@ var enemy_unit : Unit
  
 func _ready() -> void:
 	InputManager.register_game_input_handlers(self)
+	window_size = get_viewport().get_visible_rect().size / DisplayServer.screen_get_scale()
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
 	default_font_size = 10

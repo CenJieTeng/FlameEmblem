@@ -13,7 +13,7 @@ func register_game_input_handlers(obj: Node):
 		print("注册GameInput ", obj.name)
 
 func _process(delta: float) -> void:
-	if UIManager.handle_ui_input():
+	if UIManager.handle_ui_input() and not Input.is_action_just_pressed("mouse_right"):
 		return
 	handle_game_input()
 		

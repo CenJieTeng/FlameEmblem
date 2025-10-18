@@ -5,7 +5,7 @@ func _ready() -> void:
 	UIManager.register_ui(get_ui_name(), self)
 
 func get_ui_name():
-	return "unknow"
+	return UIManager.UI_NAME.INVALID
 	
 func is_handle_input():
 	return false

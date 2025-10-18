@@ -10,3 +10,4 @@ script = ExtResource("1_2x7x1")
 sprite_frames = ExtResource("2_lpqta")
 animation = &"idle"
 autoplay = "idle"
+offset = Vector2(0, -8)

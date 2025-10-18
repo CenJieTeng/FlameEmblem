@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dsnt3deoqnr82"]
+
+[ext_resource type="Shader" uid="uid://c4885jrlfe5p8" path="res://Shader/SpriteRemoveColor.gdshader" id="1_q5spk"]
+
+[resource]
+shader = ExtResource("1_q5spk")
+shader_parameter/color_to_remove = Color(0.501961, 0.627451, 0.501961, 1)
+shader_parameter/threshold = 0.1

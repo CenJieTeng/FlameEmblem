@@ -8,7 +8,6 @@ extends Control
 func update_info(unit: Unit):
 	var atlas = head_image.texture as AtlasTexture
 	atlas.atlas = unit.head_texture
-	head_image.texture = atlas
 	name_node.text = unit.unit_name
 	var max_hp = unit.stats["max_hp"];
 	var hp = unit.stats["hp"];

@@ -45,16 +45,9 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	grid_position = pos
 	camp = p_camp
 	position = grid_map.grid_to_world(grid_position)
-	animator.sprite_frames = load("res://Sprites/Animation/UnitSpriteFrames/Lord.tres").duplicate(true)
-	
-	head_texture = load(Global.name_to_unit_sprite_frames_map[unit_name][0])
-	
-	# 创建待机动画
-	create_idle_anim()
 
-	# 创建移动动画
-	create_move_anim()
-	
+	animator.sprite_frames = Global.sprite_frams_map[unit_name]
+	head_texture = load(Global.name_to_unit_sprite_frames_map[unit_name][0])
 	animator.play("idle")
 	
 func is_alive():
