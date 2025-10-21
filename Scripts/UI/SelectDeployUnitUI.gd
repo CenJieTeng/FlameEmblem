@@ -34,7 +34,7 @@ func is_handle_input():
 func open_ui():
 	super()
 	scene_deploy_count = SceneManager.get_scene().deploy_count
-	unit_count = UnitManager.unit_dict.size()
+	unit_count = UnitManager.unit_list.size()
 	
 	for deploy_unit_item in UnitManager.deploy_item_list:
 		unit_list_container.add_child(deploy_unit_item)
@@ -115,11 +115,14 @@ func handle_ui_input() -> bool:
 	
 func update_deploy_unit_info(deploy_item: DeployUnitItem):
 	name_label.text = deploy_item.unit_name
-	var texture = load(Global.name_to_unit_sprite_frames_map[deploy_item.unit_name][0])
+	var texture = UnitManager.unit_dict[deploy_item.unit_name].head_texture
 	var atlas = head_texture.texture as AtlasTexture
 	atlas.atlas = texture
-	level_label.text = str(UnitManager.unit_dict[deploy_item.unit_name].level)
-	exp_label.text = str(UnitManager.unit_dict[deploy_item.unit_name].exp)
+
+	var unit_data = UnitManager.unit_dict[deploy_item.unit_name]
+	level_label.text = str(unit_data.level)
+	exp_label.text = str(unit_data.experience)
+
 
 func update_deploy_num():
 	left_num_balel.text = str(scene_deploy_count - cur_deploy_count)

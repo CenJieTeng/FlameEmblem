@@ -2,24 +2,35 @@
   "column_properties": {
     "res://Resource/": {
       "metadata/_custom_type_script": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_local_to_scene": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_name": {
-        "visibility": 0
+        "visibility": 0.0
+      }
+    },
+    "res://Resource/Unit/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
       }
     },
     "res://example/Items/": {
       "metadata/_custom_type_script": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_local_to_scene": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_name": {
-        "visibility": 0
+        "visibility": 0.0
       }
     },
     "res://example/Items/items/": {
@@ -37,7 +48,8 @@
   "recent_paths": [
     "res://example/Items/items/",
     "res://Resource/",
-    "res://example/Items/"
+    "res://example/Items/",
+    "res://Resource/Unit/"
   ],
   "table_functions": {
     "filter": [

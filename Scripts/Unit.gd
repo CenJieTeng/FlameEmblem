@@ -8,13 +8,7 @@ enum UnitCamp
 }
 
 var unit_name : String = "名称"
-var stats=  {
-	"max_hp": 10,
-	"hp": 10,
-	"atk": 12,
-	"def": 2,
-	"mov": 7  # 移动力
-}
+var unit_data : UnitData
 var camp = UnitCamp.PLAYER
 var old_grid_position = Vector2i.ZERO
 var grid_position = Vector2i.ZERO
@@ -42,67 +36,17 @@ func _ready() -> void:
 
 func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	unit_name = p_name
+	unit_data = UnitManager.unit_dict[unit_name].duplicate(true)
 	grid_position = pos
 	camp = p_camp
 	position = grid_map.grid_to_world(grid_position)
 
-	animator.sprite_frames = Global.sprite_frams_map[unit_name]
-	head_texture = load(Global.name_to_unit_sprite_frames_map[unit_name][0])
+	animator.sprite_frames = UnitManager.sprite_frams_map[unit_name]
+	head_texture = unit_data.head_texture
 	animator.play("idle")
 	
 func is_alive():
-	return stats["hp"] > 0
-	
-func create_idle_anim():
-	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][1])
-	var atlas1 = AtlasTexture.new()
-	atlas1.atlas = tex
-	atlas1.region = Rect2(0, 0, 64, 48)
-	atlas1.margin = Rect2(0, -8, 0, 0)
-	animator.sprite_frames.set_frame("idle", 0, atlas1)
-	var atlas2 = AtlasTexture.new()
-	atlas2.atlas = tex
-	atlas2.region = Rect2(64, 0, 64, 48)
-	atlas2.margin = Rect2(0, -8, 0, 0)
-	animator.sprite_frames.set_frame("idle", 1, atlas2)
-	var atlas3 = AtlasTexture.new()
-	atlas3.atlas = tex
-	atlas3.region = Rect2(128, 0, 64, 48)
-	atlas3.margin = Rect2(0, -8, 0, 0)
-	animator.sprite_frames.set_frame("idle", 2, atlas3)
-	animator.sprite_frames.set_frame("idle", 3, atlas2)
-	animator.sprite_frames.set_frame("idle", 4, atlas1)
-	
-func create_move_anim():
-	var tex = load(Global.name_to_unit_sprite_frames_map[unit_name][2])
-	var offsety = -11
-	for i in range(4):
-		var atlas = AtlasTexture.new()
-		atlas.atlas = tex
-		atlas.region = Rect2(i * 48, 0, 48, 40)
-		atlas.margin = Rect2(0, offsety, 0, 0)
-		animator.sprite_frames.set_frame("move_down", i, atlas)
-		
-	for i in range(4):
-		var atlas = AtlasTexture.new()
-		atlas.atlas = tex
-		atlas.region = Rect2(i * 48, 40, 48, 40)
-		atlas.margin = Rect2(0, offsety, 0, 0)
-		animator.sprite_frames.set_frame("move_left", i, atlas)
-		
-	for i in range(4):
-		var atlas = AtlasTexture.new()
-		atlas.atlas = tex
-		atlas.region = Rect2(i * 48, 80, 48, 40)
-		atlas.margin = Rect2(0, offsety, 0, 0)
-		animator.sprite_frames.set_frame("move_right", i, atlas)
-	
-	for i in range(4):
-		var atlas = AtlasTexture.new()
-		atlas.atlas = tex
-		atlas.region = Rect2(i * 48, 122, 48, 40)
-		atlas.margin = Rect2(0, offsety, 0, 0)
-		animator.sprite_frames.set_frame("move_up", i, atlas)
+	return unit_data.hp > 0
 	
 func set_pos(grid: Vector2i):
 	old_grid_position = grid_position
@@ -143,7 +87,7 @@ func calc_moveable():
 	while not queue.is_empty():
 		var current = queue.pop_front()
 		
-		if current.move_cost < stats["mov"]:
+		if current.move_cost < unit_data.mov:
 			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				var next_pos = current.pos + dir
 				
@@ -151,7 +95,7 @@ func calc_moveable():
 					continue
 					
 				var terrain_data = grid_map.get_terrain_data(next_pos)
-				if not terrain_data or current.move_cost + terrain_data.move_cost > stats["mov"]:
+				if not terrain_data or current.move_cost + terrain_data.move_cost > unit_data.mov:
 					continue
 					
 				var unit = game_manager.get_unit_by_grid(next_pos)
@@ -177,7 +121,7 @@ func clac_attckable():
 	while not queue.is_empty():
 		var current = queue.pop_front()
 		
-		if current.move_cost < stats["mov"]:
+		if current.move_cost < unit_data.mov:
 			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				var next_pos = current.pos + dir
 				
@@ -208,7 +152,7 @@ func clac_attckable2():
 	while not queue.is_empty():
 		var current = queue.pop_front()
 		
-		if current.move_cost < stats["mov"]:
+		if current.move_cost < unit_data.mov:
 			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				var next_pos = current.pos + dir
 				

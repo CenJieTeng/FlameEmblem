@@ -44,9 +44,8 @@ func execute_command2(command: String, args: Array = []) -> String:
 		"addunit":
 			var x = args[0].to_int()
 			var y = args[1].to_int()
-			var index = args[2].to_int()
+			var unit_name = args[2]
 			var camp = args.get(3).to_int() if args.size() > 3 else 0
-			var unit_name = Global.name_to_unit_sprite_frames_map.keys()[index]
 			game_manager.create_unit(unit_name, Vector2i(x, y), camp)
 			return "addunit suc"
 		_:

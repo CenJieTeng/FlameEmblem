@@ -9,8 +9,8 @@ func update_info(unit: Unit):
 	var atlas = head_image.texture as AtlasTexture
 	atlas.atlas = unit.head_texture
 	name_node.text = unit.unit_name
-	var max_hp = unit.stats["max_hp"];
-	var hp = unit.stats["hp"];
+	var max_hp = unit.unit_data.max_hp;
+	var hp = unit.unit_data.hp;
 	hp_label.text = str(hp) + "/" + str(max_hp);
 	hp_progress.max_value = max_hp;
 	hp_progress.value = hp;

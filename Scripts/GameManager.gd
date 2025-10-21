@@ -389,11 +389,11 @@ func select_menu_item(index: int):
 			UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 
 func attack(attack_unit: Unit, target_unit: Unit):
-	var damage = attack_unit.stats["atk"] - target_unit.stats["def"]
+	var damage = attack_unit.unit_data.strength - target_unit.unit_data.defense
 	if damage > 0:
-		target_unit.stats["hp"] -= damage
+		target_unit.unit_data.hp -= damage
 		print(attack_unit.unit_name, " 攻击 ", target_unit.unit_name, " 造成 ", damage, " 伤害")
-		print(target_unit.unit_name, " 剩余 ", target_unit.stats["hp"], " 生命值")
+		print(target_unit.unit_name, " 剩余 ", target_unit.unit_data.hp, " 生命值")
 
 func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, loops: int = 3):
 	var shake = create_tween().set_loops(loops)
@@ -457,7 +457,7 @@ func attack_anim(attack_unit: Unit, target_unit: Unit):
 
 	attack_unit.animator.play("idle")
 	
-	if target_unit.stats["hp"] <= 0:
+	if target_unit.unit_data.hp <= 0:
 		print(target_unit.unit_name, " 死亡")
 		tween = create_tween()
 		tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 0), tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)

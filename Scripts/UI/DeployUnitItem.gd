@@ -8,7 +8,7 @@ var is_deploy := false
 var born_pos_index := 0
 
 func update_info():
-	sprite_anim.sprite_frames = Global.sprite_frams_map[unit_name]
+	sprite_anim.sprite_frames = UnitManager.sprite_frams_map[unit_name]
 	sprite_anim.play("idle")
 	if is_deploy:
 		sprite_anim.material = null
@@ -19,16 +19,19 @@ func update_info():
 
 func deploy():
 	is_deploy = !is_deploy
-	
-	var born_pos_arr : Array[int]
-	for deploy_item in UnitManager.deploy_item_list:
-		if deploy_item.is_deploy:
-			born_pos_arr.append(deploy_item.born_pos_index)
-			
-	for i in range(SceneManager.get_scene().unit_born_pos.size()):
-		if not born_pos_arr.has(i):
-			born_pos_index = i
-			break
+
+	if is_deploy:
+		var born_pos_arr : Array[int]
+		for deploy_item in UnitManager.deploy_item_list:
+			if deploy_item.is_deploy:
+				born_pos_arr.append(deploy_item.born_pos_index)
+				
+		for i in range(SceneManager.get_scene().unit_born_pos.size()):
+			if not born_pos_arr.has(i):
+				born_pos_index = i
+				break
+	else:
+		born_pos_index = -1
 	
 	update_info()
 	

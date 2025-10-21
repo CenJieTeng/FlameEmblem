@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://dkyxifrvffm4l"]
+
+[ext_resource type="Texture2D" uid="uid://bj7uptkp0v8ix" path="res://Sprites/Characters/PlayerCharacters/FordePortrait.png" id="1_7kcm8"]
+[ext_resource type="Script" uid="uid://b3b2wswpk7da0" path="res://Scripts/UnitData.gd" id="1_qs4p0"]
+[ext_resource type="Texture2D" uid="uid://c3ou7nwumngw3" path="res://Sprites/Characters/MapSprites/Hero/enemyHeroM.png" id="2_5ljmh"]
+[ext_resource type="Texture2D" uid="uid://djgh5dtwuqm72" path="res://Sprites/Characters/MapSprites/Hero/enemyHeroM_move.png" id="3_kc6ls"]
+
+[resource]
+script = ExtResource("1_qs4p0")
+head_texture = ExtResource("1_7kcm8")
+idea_texture = ExtResource("2_5ljmh")
+move_texture = ExtResource("3_kc6ls")
+max_hp = 10
+strength = 12
+magic = 1
+skill = 1
+speed = 1
+luck = 1
+defense = 2
+resistance = 1
+mov = 7
+hp = 0
+level = 1
+experience = 0
+unit_name = "敌人1"
+metadata/_custom_type_script = "uid://b3b2wswpk7da0"

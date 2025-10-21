@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=5 format=3 uid="uid://bduqm7gqxoigt"]
+
+[ext_resource type="Script" uid="uid://b3b2wswpk7da0" path="res://Scripts/UnitData.gd" id="1_kbjpy"]
+[ext_resource type="Texture2D" uid="uid://dsjmwihnqndt1" path="res://Sprites/Characters/PlayerCharacters/EphraimPortrait.png" id="1_q2m57"]
+[ext_resource type="Texture2D" uid="uid://dvioqd3gd0t0w" path="res://Sprites/Characters/MapSprites/Lord/playerEphraim_LordM.png" id="2_1ue5x"]
+[ext_resource type="Texture2D" uid="uid://cpft80mluysxc" path="res://Sprites/Characters/MapSprites/Lord/playerEphraim_LordM_move.png" id="3_1b0rw"]
+
+[resource]
+script = ExtResource("1_kbjpy")
+head_texture = ExtResource("1_q2m57")
+idea_texture = ExtResource("2_1ue5x")
+move_texture = ExtResource("3_1b0rw")
+max_hp = 10
+strength = 12
+magic = 1
+skill = 1
+speed = 1
+luck = 1
+defense = 2
+resistance = 1
+mov = 7
+hp = 0
+level = 1
+experience = 0
+unit_name = "角色2"
+metadata/_custom_type_script = "uid://b3b2wswpk7da0"
