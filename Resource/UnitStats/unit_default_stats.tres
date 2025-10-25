@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UnitStats" load_steps=2 format=3 uid="uid://dy1mv0hfhr0ws"]
+
+[ext_resource type="Script" uid="uid://8ktelw7asr3c" path="res://Scripts/UnitStats.gd" id="1_vrkyx"]
+
+[resource]
+script = ExtResource("1_vrkyx")
+max_hp = 20
+strength = 12
+magic = 0
+skill = 0
+speed = 0
+luck = 0
+defense = 2
+resistance = 0
+mov = 7
+hp = 0
+metadata/_custom_type_script = "uid://8ktelw7asr3c"

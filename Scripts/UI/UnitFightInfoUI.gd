@@ -10,15 +10,15 @@ extends Control
 
 func update_info(unit1: Unit, unit2: Unit):
 	name_node1.text = unit1.unit_name
-	var max_hp1 = unit1.unit_data.max_hp;
-	var hp1 = unit1.unit_data.hp;
+	var max_hp1 = unit1.get_stats().max_hp;
+	var hp1 = unit1.get_stats().hp;
 	hp_label1.text = str(hp1) + "/" + str(max_hp1);
 	hp_progress1.max_value = max_hp1;
 	hp_progress1.value = hp1;
 	
 	name_node2.text = unit2.unit_name
-	var max_hp2 = unit2.unit_data.max_hp;
-	var hp2 = unit2.unit_data.hp;
+	var max_hp2 = unit2.get_stats().max_hp;
+	var hp2 = unit2.get_stats().hp;
 	hp_label2.text = str(hp2) + "/" + str(max_hp2);
 	hp_progress2.max_value = max_hp2;
 	hp_progress2.value = hp2;

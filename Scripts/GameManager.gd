@@ -77,6 +77,11 @@ func _ready() -> void:
 	cursor.connect("pos_change", _on_cursor_pos_change)	
 	check_hud_state()
 
+	SceneManager.connect("pre_scene_change", func():
+		for unit in unit_list:
+			unit.save_data()
+	)
+
 func _process(_delta: float) -> void:
 	queue_redraw()
 	
@@ -389,11 +394,9 @@ func select_menu_item(index: int):
 			UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 
 func attack(attack_unit: Unit, target_unit: Unit):
-	var damage = attack_unit.unit_data.strength - target_unit.unit_data.defense
+	var damage = attack_unit.get_stats().strength - target_unit.get_stats().defense
 	if damage > 0:
-		target_unit.unit_data.hp -= damage
-		print(attack_unit.unit_name, " 攻击 ", target_unit.unit_name, " 造成 ", damage, " 伤害")
-		print(target_unit.unit_name, " 剩余 ", target_unit.unit_data.hp, " 生命值")
+		target_unit.hurt(damage)
 
 func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, loops: int = 3):
 	var shake = create_tween().set_loops(loops)
@@ -457,15 +460,15 @@ func attack_anim(attack_unit: Unit, target_unit: Unit):
 
 	attack_unit.animator.play("idle")
 	
-	if target_unit.unit_data.hp <= 0:
+	if not target_unit.is_alive():
 		print(target_unit.unit_name, " 死亡")
+		attack_unit.level_manager.add_exp(100)
 		tween = create_tween()
 		tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 0), tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		get_tree().create_timer(1).timeout.connect(func():
-			target_unit.emit_signal("unit_signal", target_unit, "die")
 			unit_list.erase(target_unit)
-			target_unit.queue_free()
 			update_unit_pos_map()
+			target_unit.die()
 		)
 
 	attack_unit.z_index = attack_z_index

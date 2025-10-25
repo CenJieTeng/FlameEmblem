@@ -9,10 +9,10 @@ uniform float threshold : hint_range(0.0, 1.0) = 0.1;
 
 void fragment() {
 	 vec4 tex_color = texture(TEXTURE, UV);
-	
+
 	// 计算颜色差异
     float color_diff = distance(tex_color.rgb, color_to_remove.rgb);
-    
+
     // 如果颜色接近要移除的颜色，设置为透明
     if (color_diff < threshold) {
         COLOR = vec4(0.0, 0.0, 0.0, 0.0);

@@ -35,6 +35,7 @@ SceneManager="*res://Scripts/Scene/SceneManager.gd"
 InputManager="*res://Scripts/InputManager.gd"
 UIManager="*res://Scripts/UI/UIManager.gd"
 UnitManager="*res://Scripts/UnitManager.gd"
+SaveSystem="*res://Scripts/SaveSystem.gd"
 
 [display]
 

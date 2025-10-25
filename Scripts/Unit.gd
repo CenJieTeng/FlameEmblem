@@ -8,7 +8,6 @@ enum UnitCamp
 }
 
 var unit_name : String = "名称"
-var unit_data : UnitData
 var camp = UnitCamp.PLAYER
 var old_grid_position = Vector2i.ZERO
 var grid_position = Vector2i.ZERO
@@ -21,7 +20,10 @@ var attackable_grids : Array[Vector2i] = []
 
 var game_manager : GameManager
 var grid_map : CustomGridMap
+var unit_data : UnitData
+var unit_stats : UnitStats
 var animator : AnimatedSprite2D
+var level_manager : LevelManager
 
 var head_texture : Texture
 
@@ -37,6 +39,9 @@ func _ready() -> void:
 func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	unit_name = p_name
 	unit_data = UnitManager.unit_dict[unit_name].duplicate(true)
+	unit_stats = unit_data.stats
+	unit_stats._init()
+
 	grid_position = pos
 	camp = p_camp
 	position = grid_map.grid_to_world(grid_position)
@@ -44,9 +49,38 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	animator.sprite_frames = UnitManager.sprite_frams_map[unit_name]
 	head_texture = unit_data.head_texture
 	animator.play("idle")
+
+	level_manager = LevelManager.new(self, unit_data.level, unit_data.experience)
+
+func get_stats() -> UnitStats:
+	var total_stats := unit_stats.duplicate()
+	total_stats = total_stats.add(level_manager.get_stats())
+	return total_stats
+
+func hurt(damage : int):
+	unit_stats.hp -= damage
+	if unit_stats.hp < 0:
+		unit_stats.hp = 0
+	print("%s 受到 %d 点伤害，当前生命值 %d/%d" % [unit_name, damage, get_stats().hp, get_stats().max_hp])
+
+func heal(amount : int):
+	unit_stats.hp += amount
+	if unit_stats.hp > get_stats().max_hp:
+		unit_stats.hp = get_stats().max_hp
+	print("%s 恢复 %d 点生命，当前生命值 %d/%d" % [unit_name, amount, get_stats().hp, get_stats().max_hp])
 	
 func is_alive():
-	return unit_data.hp > 0
+	return get_stats().hp > 0
+
+func die():
+	emit_signal("unit_signal", self, "die")
+	save_data()
+	queue_free()
+
+func save_data():
+	level_manager.save_data(unit_data)
+	SaveSystem.save_unit(unit_data)
+	print("保存数据 %s 等级 %d 经验 %d" % [unit_name, unit_data.level, unit_data.experience])
 	
 func set_pos(grid: Vector2i):
 	old_grid_position = grid_position
@@ -87,7 +121,7 @@ func calc_moveable():
 	while not queue.is_empty():
 		var current = queue.pop_front()
 		
-		if current.move_cost < unit_data.mov:
+		if current.move_cost < get_stats().mov:
 			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				var next_pos = current.pos + dir
 				
@@ -95,7 +129,7 @@ func calc_moveable():
 					continue
 					
 				var terrain_data = grid_map.get_terrain_data(next_pos)
-				if not terrain_data or current.move_cost + terrain_data.move_cost > unit_data.mov:
+				if not terrain_data or current.move_cost + terrain_data.move_cost > get_stats().mov:
 					continue
 					
 				var unit = game_manager.get_unit_by_grid(next_pos)
@@ -121,7 +155,7 @@ func clac_attckable():
 	while not queue.is_empty():
 		var current = queue.pop_front()
 		
-		if current.move_cost < unit_data.mov:
+		if current.move_cost < get_stats().mov:
 			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				var next_pos = current.pos + dir
 				
@@ -152,7 +186,7 @@ func clac_attckable2():
 	while not queue.is_empty():
 		var current = queue.pop_front()
 		
-		if current.move_cost < unit_data.mov:
+		if current.move_cost < get_stats().mov:
 			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 				var next_pos = current.pos + dir
 				

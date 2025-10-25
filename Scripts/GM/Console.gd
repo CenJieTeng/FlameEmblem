@@ -4,6 +4,7 @@ extends BaseUI
 @onready var output_text : RichTextLabel = $Panel/VBoxContainer/RichTextLabel
 
 var game_manager : GameManager
+var last_command : String = ""
 
 func _ready() -> void:
 	super._ready()
@@ -23,11 +24,15 @@ func open_ui():
 func handle_ui_input() -> bool:
 	if Input.is_action_just_pressed("toggle_console"):
 		close_ui()
+	if Input.is_action_just_pressed("up"):
+		input_field.text = last_command
+		input_field.grab_focus()
 	return true
 	
 func _on_command_submitted(command: String):
 	if command.strip_edges() != "":
 		excute_command(command)
+		last_command = command
 	input_field.clear()
 	
 func excute_command(command: String):
@@ -47,6 +52,10 @@ func execute_command2(command: String, args: Array = []) -> String:
 			var unit_name = args[2]
 			var camp = args.get(3).to_int() if args.size() > 3 else 0
 			game_manager.create_unit(unit_name, Vector2i(x, y), camp)
-			return "addunit suc"
+		"addlvl":
+			var level = args[0].to_int()
+			if game_manager.current_unit:
+				game_manager.current_unit.level_manager.add_exp(level * 100)
 		_:
 			return "Unknown command: " + command + "\nType 'help' for available commands"
+	return "addlevel suc"

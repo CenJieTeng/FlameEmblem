@@ -12,6 +12,7 @@ var level_path = [
 
 func _ready() -> void:
 	add_user_signal("pre_scene_change")
+	add_user_signal("end_scene_change")
 
 func set_scene(scene: BaseScene):
 	cur_scene = scene
@@ -53,6 +54,9 @@ func simple_fade_transition(scene_path: String, fade_duration: float = 1.0):
 	get_tree().root.add_child(canvas_layer)
 
 	emit_signal("pre_scene_change")
+	
+	# 保存数据
+	SaveSystem.save_game()
 
 	# 淡入
 	var tween = create_tween()
@@ -61,6 +65,8 @@ func simple_fade_transition(scene_path: String, fade_duration: float = 1.0):
 
 	# 切换场景
 	get_tree().change_scene_to_file(scene_path)
+
+	emit_signal("end_scene_change")
 
 	# 淡出
 	tween = create_tween()

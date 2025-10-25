@@ -21,15 +21,17 @@ func create_sprite_frames():
 		sprite_frams_map[unit_name] = sprite_frames
 
 func _ready() -> void:
-	SceneManager.connect("pre_scene_change", func():
+	SceneManager.connect("end_scene_change", func():
 		deploy_item_list.clear()
+		for unit in SaveSystem.save_data.unit_dict.values():
+			unit_dict[unit.unit_name] = unit
 	)
 	
 	var path = "res://Resource/Unit/"
 	var files = Global.list_files_in_directory(path)
 	for file in files:
 		var data = load(path + file) as UnitData
-		data._init()
+		data.init()
 		unit_dict[data.unit_name] = data
 
 	create_sprite_frames()
