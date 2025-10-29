@@ -1,0 +1,278 @@
+extends Node
+class_name BattleSystem
+
+class BattleUnit:
+	var unit_name : String
+	var max_hp : int
+	var strength : int
+	var magic : int
+	var skill : int
+	var speed : int
+	var luck : int
+	var defense : int
+	var resistance : int
+	var hp : int
+
+func create_battle_unit(unit: Unit) -> BattleUnit:
+	var battle_unit = BattleUnit.new()
+	var stats = unit.get_stats()
+	battle_unit.unit_name = unit.unit_name
+	battle_unit.max_hp = stats.max_hp
+	battle_unit.strength = stats.strength
+	battle_unit.magic = stats.magic
+	battle_unit.skill = stats.skill	
+	battle_unit.speed = stats.speed
+	battle_unit.luck = stats.luck
+	battle_unit.defense = stats.defense
+	battle_unit.resistance = stats.resistance
+	battle_unit.hp = stats.hp
+	return battle_unit
+
+class BattleResult:
+	var attacker : BattleUnit
+	var defender : BattleUnit
+	var round_results : Array[RoundResult]
+
+
+class RoundResult:
+	var attacker : BattleUnit
+	var defender : BattleUnit
+	var damage : int
+	var hp : int
+	var is_miss : bool
+	var is_critical : bool
+	var is_skill : bool
+
+
+var preare_data : Dictionary
+
+func _ready() -> void:
+	add_user_signal("hp_changed", [TYPE_STRING, TYPE_INT, TYPE_INT])
+
+func battle(attacker: Unit, defender: Unit):
+	# 准备数据
+	preare_data = preare_battle_data(attacker, defender)
+	
+	# 战斗计算
+	var battle_result = simulate_battle(preare_data["attacker"], preare_data["defender"])
+
+	# 战斗表现
+	present_battle_result(battle_result)
+	await present_battle_result_skip_anim(battle_result)
+
+	# 应用结果
+	apply_battle_result(battle_result)
+	
+func preare_battle_data(attacker: Unit, defender: Unit) -> Dictionary:
+	var attacker_battle_unit = create_battle_unit(attacker)
+	var defender_battle_unit = create_battle_unit(defender)
+	return {
+		"attacker_real_unit" : attacker,
+		"defender_real_unit" : defender,
+		"attacker": attacker_battle_unit,
+		"defender": defender_battle_unit
+	}
+
+func calc_damage(attacker: BattleUnit, defender: BattleUnit) -> int:
+	var damage = attacker.strength - defender.defense
+	if damage < 0:
+		damage = 0
+	return damage
+
+func calc_hit_rate(attacker: BattleUnit, defender: BattleUnit) -> int:
+	return 0
+	var hit_rate = 80 + (attacker.skill * 2) + (attacker.luck / 2) - (defender.speed * 2) - (defender.luck / 2)
+	return clamp(hit_rate, 0, 100)
+
+func simulate_battle(attacker: BattleUnit, defender: BattleUnit) -> BattleResult:
+	var battle_result = BattleResult.new()
+	battle_result.attacker = attacker
+	battle_result.defender = defender
+
+	var attaacker_round_result = simulate_round(attacker, defender)
+	battle_result.round_results.append(attaacker_round_result)
+
+	if defender.hp > 0:
+		var defender_round_result = simulate_round(defender, attacker)
+		battle_result.round_results.append(defender_round_result)
+
+	return battle_result
+
+func simulate_round(attacker: BattleUnit, defender: BattleUnit) -> RoundResult:
+	var round_result = RoundResult.new()
+	round_result.attacker = attacker
+	round_result.defender = defender
+
+	var hit_rate = calc_hit_rate(attacker, defender)
+	var roll = randi() % 100
+	if roll >= hit_rate:
+		round_result.is_miss = true
+		round_result.damage = 0
+	else:
+		round_result.is_miss = false
+		var damage = calc_damage(attacker, defender)
+		round_result.damage = damage
+		defender.hp -= damage
+		if defender.hp < 0:
+			defender.hp = 0
+			
+	round_result.hp = defender.hp
+	return round_result
+
+func present_battle_result(battle_result: BattleResult):
+	var attacker_unit = preare_data["attacker_real_unit"]
+	var defender_unit = preare_data["defender_real_unit"]
+
+	print("战斗开始 攻击者 %s 防御者 %s" % [attacker_unit.unit_name, defender_unit.unit_name])
+	print("战斗开始")
+	var cur_round = 0
+	for round_result in battle_result.round_results:
+		var attacker = round_result.attacker
+		var defender = round_result.defender
+		cur_round += 1
+		print("第 %d 回合：" % cur_round)
+		if round_result.is_miss:
+			print("%s 攻击未命中！" % attacker_unit.unit_name)
+		else:
+			print("%s 对 %s 造成 %d 点伤害！" % [attacker.unit_name, defender.unit_name, round_result.damage])
+			print("%s 当前生命值 %d/%d" % [defender.unit_name, defender.hp, defender.max_hp])
+		print("--------------------------")
+	print("战斗结束")
+
+func present_battle_result_skip_anim(battle_result: BattleResult):
+	var attacker_real_unit = preare_data["attacker_real_unit"]
+	var defender_real_unit = preare_data["defender_real_unit"]
+
+	for round_result in battle_result.round_results:
+		var attacker = round_result.attacker
+		#var defender = round_result.defender
+		if attacker.unit_name == attacker_real_unit.unit_name:
+			await attack_anim(round_result, attacker_real_unit, defender_real_unit)
+		else:
+			await attack_anim(round_result, defender_real_unit, attacker_real_unit)
+
+
+func apply_battle_result(battle_result: BattleResult):
+	var attacker_unit = preare_data["attacker_real_unit"] as Unit
+	var defender_unit = preare_data["defender_real_unit"] as Unit
+	attacker_unit.unit_stats.hp = battle_result.attacker.hp
+	defender_unit.unit_stats.hp = battle_result.defender.hp
+	check_unit_alive(defender_unit, attacker_unit)
+	check_unit_alive(attacker_unit, defender_unit)
+
+	
+
+func check_unit_alive(defender_real_unit: Unit, attacker_real_unit: Unit):
+	if not defender_real_unit.is_alive():
+		print(defender_real_unit.unit_name, " 死亡")
+		attacker_real_unit.level_manager.add_exp(100)
+		var tween = create_tween()
+		tween.tween_property(defender_real_unit, "modulate", Color(1, 1, 1, 0), 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		get_tree().create_timer(1).timeout.connect(func():
+			#unit_list.erase(defender_real_unit)
+			#update_unit_pos_map()
+			defender_real_unit.die()
+		)
+
+func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, loops: int = 3):
+	var shake = create_tween().set_loops(loops)
+
+	# 向左震动
+	shake.tween_property(target, "rotation", deg_to_rad(-strength), duration * 0.33).set_trans(Tween.TRANS_SINE)
+
+	# 向右震动
+	shake.tween_property(target, "rotation", deg_to_rad(strength), duration * 0.33).set_trans(Tween.TRANS_SINE)
+
+	# 回正
+	shake.tween_property(target, "rotation", 0, duration * 0.33).set_trans(Tween.TRANS_SINE)
+	await shake.finished
+
+func attack_anim(round_result: RoundResult, attacker_real_unit: Unit, defender_real_unit: Unit):
+	var attack_z_index = attacker_real_unit.z_index
+	var target_z_index = defender_real_unit.z_index
+	attacker_real_unit.z_index = 100 * attacker_real_unit.grid_position.y + 1
+	defender_real_unit.z_index = 100 * defender_real_unit.grid_position.y
+
+	var anim : String
+	var miss_move_dir : Vector2 = Vector2(5, 0)
+	if defender_real_unit.grid_position.x > attacker_real_unit.grid_position.x:
+		anim = "move_right"
+	if defender_real_unit.grid_position.x < attacker_real_unit.grid_position.x:
+		anim = "move_left"
+		miss_move_dir = Vector2(-5, 0)
+	if defender_real_unit.grid_position.y > attacker_real_unit.grid_position.y:
+		anim = "move_down"
+	if defender_real_unit.grid_position.y < attacker_real_unit.grid_position.y:
+		anim = "move_up"
+	attacker_real_unit.animator.play(anim)
+	attacker_real_unit.animator.stop()
+
+	await get_tree().create_timer(0.3).timeout
+	attacker_real_unit.animator.play()
+
+	var tween = create_tween()
+	var origin = attacker_real_unit.position
+	var tween_time = 0.2
+	tween.tween_property(attacker_real_unit, "position", origin.lerp(defender_real_unit.position, 0.6), tween_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await get_tree().create_timer(0.1).timeout
+
+	attacker_real_unit.animator.speed_scale = 2.0
+
+	if round_result.is_miss:
+		# 在单位上方显示“未命中”文字
+		var miss_label = Label.new()
+		miss_label.text = "miss"
+		miss_label.modulate = Color(1, 1, 1)
+
+		# 设置字体大小
+		var font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
+		miss_label.add_theme_font_override("font", font)
+		miss_label.add_theme_font_size_override("font_size", 8)
+
+		defender_real_unit.add_child(miss_label)
+		miss_label.position = Vector2(-10, -10)  # 调整 y 值，确保文字在角色上方
+		miss_label.z_index = 1000
+
+		# 被攻击方y上移动一点然后回落
+		var defender_tween_time = 0.1
+		var miss_tween = create_tween()
+		miss_tween.tween_property(defender_real_unit, "position", defender_real_unit.position + miss_move_dir, defender_tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		await miss_tween.finished
+
+		# 文字上浮并淡出
+		var miss_tween_time = 0.2
+		var text_tween = create_tween()
+		text_tween.tween_property(miss_label, "position", miss_label.position + Vector2(0, -10), miss_tween_time)
+		text_tween.tween_property(miss_label, "modulate:a", 0, miss_tween_time)
+
+		miss_tween = create_tween()
+		miss_tween.tween_property(defender_real_unit, "position", defender_real_unit.position - miss_move_dir, defender_tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		await miss_tween.finished
+
+		await text_tween.finished
+		miss_label.queue_free()
+	else:
+		# 被攻击单位加上闪烁效果，使用tween实现
+		var tween_time2 = 0.08
+		tween =	create_tween()
+		await tween.tween_property(defender_real_unit, "modulate", Color(2, 2, 2, 1), tween_time2).finished
+
+		emit_signal("hp_changed", defender_real_unit.unit_name, round_result.hp, defender_real_unit.get_stats().max_hp)
+
+		# 震动
+		await shake_target(defender_real_unit, 3.0, 0.1, 1)
+
+		tween =	create_tween()
+		await tween.tween_property(defender_real_unit, "modulate", Color(1, 1, 1, 1), tween_time2).finished
+
+	attacker_real_unit.animator.speed_scale = 1.0
+	attacker_real_unit.animator.stop()
+
+	tween = create_tween()
+	tween.tween_property(attacker_real_unit, "position", origin, tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+	attacker_real_unit.animator.play("idle")
+
+	attacker_real_unit.z_index = attack_z_index
+	defender_real_unit.z_index = target_z_index

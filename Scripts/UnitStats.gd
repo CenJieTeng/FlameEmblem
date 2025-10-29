@@ -55,7 +55,7 @@ func add(other : UnitStats) -> UnitStats:
 	return new_stats
 
 
-func _to_string() -> String:
+func get_str() -> String:
 	return "HP: %d, STR: %d, MAG: %d, SKL: %d, SPD: %d, LUK: %d, DEF: %d, RES: %d, MOV: %d" % [
 		max_hp,
 		strength,

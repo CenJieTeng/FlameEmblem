@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://c1d6gaawjlytv"]
+[gd_scene load_steps=20 format=4 uid="uid://c1d6gaawjlytv"]
 
 [ext_resource type="Script" uid="uid://dnrjunkk0fm1g" path="res://Scripts/GameManager.gd" id="1_tcvln"]
 [ext_resource type="Script" uid="uid://ojvl5sac0t75" path="res://Scripts/GridMap.gd" id="2_1vqus"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://d3v3tdq3k3g4p" path="res://Scenes/UI/SelectDeployUnitUI.tscn" id="13_4ibmp"]
 [ext_resource type="Script" uid="uid://d0wie4uchncx" path="res://Scripts/Cursor.gd" id="13_6m051"]
 [ext_resource type="SpriteFrames" uid="uid://dwt8du8lawfke" path="res://Sprites/Animation/Cursor.tres" id="14_3ekuk"]
+[ext_resource type="Script" uid="uid://blwtgpu4ylf0w" path="res://Scripts/Battle/BattleSystem.gd" id="16_gnp58"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uwe06"]
 texture = ExtResource("5_ygf2a")
@@ -121,6 +122,9 @@ offset = Vector2(-0.5, 1)
 
 [node name="Timer" type="Timer" parent="Cursor"]
 wait_time = 0.1
+
+[node name="BattleSystem" type="Node" parent="."]
+script = ExtResource("16_gnp58")
 
 [node name="GameManager" type="Node2D" parent="."]
 script = ExtResource("1_tcvln")

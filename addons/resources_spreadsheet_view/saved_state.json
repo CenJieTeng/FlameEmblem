@@ -16,21 +16,35 @@
         "visibility": 0.0
       },
       "resource_local_to_scene": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_name": {
-        "visibility": 0
+        "visibility": 0.0
+      },
+      "stats": {
+        "visibility": 1.0
+      }
+    },
+    "res://Resource/Unit/Unit_table_import.tres": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
       }
     },
     "res://Resource/UnitStats/": {
       "metadata/_custom_type_script": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_local_to_scene": {
-        "visibility": 0
+        "visibility": 0.0
       },
       "resource_name": {
-        "visibility": 0
+        "visibility": 0.0
       }
     },
     "res://example/Items/": {
@@ -60,7 +74,8 @@
     "res://example/Items/items/",
     "res://Resource/",
     "res://example/Items/",
-    "res://Resource/Unit/"
+    "res://Resource/Unit/",
+    "res://Resource/Unit/Unit_table_import.tres"
   ],
   "table_functions": {
     "filter": [

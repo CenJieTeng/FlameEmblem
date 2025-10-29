@@ -33,7 +33,7 @@ func _ready() -> void:
 	animator = get_node("AnimatedSprite2D")
 	
 	add_user_signal("unit_signal", [
-		{ "unit": Unit, "action": TYPE_STRING }
+		{ "unit": Unit, "action": TYPE_STRING },
 	])
 
 func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:

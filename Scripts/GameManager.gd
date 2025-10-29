@@ -9,6 +9,7 @@ class_name GameManager
 @onready var terrain_info_ui : Control = $"../CanvasLayer/TerrainInfoUI"
 @onready var wave_info_ui : Control = $"../CanvasLayer/WaveInfoUI"
 @onready var cursor : Cursor = $"../Cursor"
+@onready var battle_system : BattleSystem = $"../BattleSystem"
 
 var cursor_dir : Vector2
 var window_size
@@ -132,6 +133,9 @@ func _on_unit_signal(unit: Unit, action: String):
 		check_wave_finish()
 		if current_wave_camp == Unit.UnitCamp.PLAYER:
 			play_state = PlayState.NONE
+	if action == "die":
+		unit_list.erase(unit)
+		update_unit_pos_map()
 
 func _on_cursor_pos_change():
 	cursor_dir = grid_map.get_direction_to_center_from_grid(cursor.pos)
@@ -393,105 +397,18 @@ func select_menu_item(index: int):
 			play_state = PlayState.NONE
 			UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 
-func attack(attack_unit: Unit, target_unit: Unit):
-	var damage = attack_unit.get_stats().strength - target_unit.get_stats().defense
-	if damage > 0:
-		target_unit.hurt(damage)
-
-func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, loops: int = 3):
-	var shake = create_tween().set_loops(loops)
-
-	# 向左震动
-	shake.tween_property(target, "rotation", deg_to_rad(-strength), duration * 0.33).set_trans(Tween.TRANS_SINE)
-
-	# 向右震动
-	shake.tween_property(target, "rotation", deg_to_rad(strength), duration * 0.33).set_trans(Tween.TRANS_SINE)
-
-	# 回正
-	shake.tween_property(target, "rotation", 0, duration * 0.33).set_trans(Tween.TRANS_SINE)
-	await shake.finished
-
-func attack_anim(attack_unit: Unit, target_unit: Unit):
-	var attack_z_index = attack_unit.z_index
-	var target_z_index = target_unit.z_index
-	attack_unit.z_index = 100 * attack_unit.grid_position.y + 1
-	target_unit.z_index = 100 * target_unit.grid_position.y
-
-	var anim : String
-	if target_unit.grid_position.x > attack_unit.grid_position.x: anim = "move_right"
-	if target_unit.grid_position.x < attack_unit.grid_position.x: anim = "move_left"
-	if target_unit.grid_position.y > attack_unit.grid_position.y: anim = "move_down"
-	if target_unit.grid_position.y < attack_unit.grid_position.y: anim = "move_up"
-	attack_unit.animator.play(anim)
-	attack_unit.animator.stop()
-
-	await get_tree().create_timer(0.3).timeout
-	attack_unit.animator.play()
-
-	var tween = create_tween()
-	var origin = attack_unit.position
-	var tween_time = 0.2
-	tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.6), tween_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	#tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.55), tween_time/2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	#tween.tween_property(attack_unit, "position", origin.lerp(target_unit.position, 0.6), tween_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	await tween.finished
-
-	attack_unit.animator.speed_scale = 2.0
-
-	# 被攻击单位加上闪烁效果，使用tween实现
-	var tween_time2 = 0.08
-	tween =	create_tween()
-	await tween.tween_property(target_unit, "modulate", Color(2, 2, 2, 1), tween_time2).finished
-
-	attack(attack_unit, target_unit)
-
-	# 震动
-	await shake_target(target_unit, 3.0, 0.1, 1)
-
-	tween =	create_tween()
-	await tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 1), tween_time2).finished
-
-	attack_unit.animator.speed_scale = 1.0
-	attack_unit.animator.stop()
-
-	tween = create_tween()
-	tween.tween_property(attack_unit, "position", origin, tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	await tween.finished
-
-	attack_unit.animator.play("idle")
-	
-	if not target_unit.is_alive():
-		print(target_unit.unit_name, " 死亡")
-		attack_unit.level_manager.add_exp(100)
-		tween = create_tween()
-		tween.tween_property(target_unit, "modulate", Color(1, 1, 1, 0), tween_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-		get_tree().create_timer(1).timeout.connect(func():
-			unit_list.erase(target_unit)
-			update_unit_pos_map()
-			target_unit.die()
-		)
-
-	attack_unit.z_index = attack_z_index
-	target_unit.z_index = target_z_index
-
-
 func fight(attack_unit: Unit, target_unit: Unit):
 	game_state = GameState.GAME_RUNING
 
 	unit_fight_info_ui.visible = true
-	unit_fight_info_ui.update_info(attack_unit, target_unit)
+	unit_fight_info_ui.init(battle_system, attack_unit, target_unit)
 	
 	if attack_unit.position.y < window_size.y / 2:
 		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y * 4 / 5)
 	else:
 		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y / 5)
-
-	# 等待攻击动画播放结束
-	await attack_anim(attack_unit, target_unit)
-	unit_fight_info_ui.update_info(attack_unit, target_unit)
-	if target_unit.is_alive():
-		await attack_anim(target_unit, attack_unit)
-		unit_fight_info_ui.update_info(attack_unit, target_unit)
+	
+	await battle_system.battle(attack_unit, target_unit)
 
 	UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 	current_unit = null

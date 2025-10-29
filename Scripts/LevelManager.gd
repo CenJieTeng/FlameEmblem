@@ -57,8 +57,8 @@ func add_exp(amount : int) -> void:
 		calc_grow_point()
 		# 更新缓存
 		update_grow_stats_cache()
-		print("grow_data: %s" % grow_data)
-		print("grow_stats_cache: %s" % grow_stats_cache)
+		print("grow_data: %s" % grow_data.get_str())
+		print("grow_stats_cache: %s" % grow_stats_cache.get_str())
 
 		# 如果hp增加了，则恢复hp
 		if grow_stats_cache.get("max_hp") > old_grow_cache.get("max_hp"):
