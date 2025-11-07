@@ -44,3 +44,8 @@ func list_files_in_directory(path: String) -> Array[String]:
 	else:
 		push_error("目录不存在: " + path)
 	return files
+
+# 等待n帧
+func wait_frames(n: int):
+	for i in n:
+		await get_tree().process_frame

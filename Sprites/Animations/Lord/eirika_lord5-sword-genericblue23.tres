@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://doq6u3r486akg"]
+
+[ext_resource type="Texture2D" uid="uid://ysorg4fiwe52" path="res://Sprites/Animations/Lord/Eirika_Lord5-Sword-GenericBlue.png" id="1_25rwc"]
+
+[resource]
+atlas = ExtResource("1_25rwc")
+region = Rect2(837, 0, 28, 44)

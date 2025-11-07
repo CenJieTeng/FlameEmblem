@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bexp44rwlh63w"]
 
 [ext_resource type="Script" uid="uid://dwa6cb0l8pmkm" path="res://Scripts/UI/DeployUnitItem.gd" id="1_dbtn4"]
-[ext_resource type="SpriteFrames" uid="uid://c16mxurf47xwp" path="res://Sprites/Animation/UnitSpriteFrames/Lord.tres" id="1_ohlkr"]
+[ext_resource type="SpriteFrames" uid="uid://c16mxurf47xwp" path="res://SpriteFrames/UnitMapSpriteFrames/Lord.tres" id="1_ohlkr"]
 [ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="2_dbtn4"]
 
 [node name="DeployUinitItem" type="Control"]

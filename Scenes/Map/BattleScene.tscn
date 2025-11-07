@@ -1,0 +1,358 @@
+[gd_scene load_steps=17 format=3 uid="uid://dffn01nbjvaj8"]
+
+[ext_resource type="Texture2D" uid="uid://bawhrjoafm6r5" path="res://Sprites/General/CombatBackgrounds/RedLeftCombatName.png" id="1_b10qc"]
+[ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="1_dw4xc"]
+[ext_resource type="Texture2D" uid="uid://0p3065hjpty6" path="res://Sprites/General/CombatBackgrounds/platforms/Plains-Melee.png" id="1_msexx"]
+[ext_resource type="Script" uid="uid://snc7tlyl7xts" path="res://Scenes/UI/BattleScene.gd" id="1_uxifu"]
+[ext_resource type="Texture2D" uid="uid://cb34hnrhveymr" path="res://Sprites/Animations/Mercenary/mercenary0-magicsword-genericred_0.tres" id="3_xbvib"]
+[ext_resource type="Texture2D" uid="uid://dusu7q7m157ce" path="res://Sprites/General/CombatBackgrounds/RedLeftMainCombatCrit.png" id="3_ys8d6"]
+[ext_resource type="Material" uid="uid://c17vxla3mnv6h" path="res://Shader/ProgressBarTile.tres" id="4_3aoi4"]
+[ext_resource type="AnimationLibrary" uid="uid://bwpus7jpv7ui8" path="res://SpriteFrames/Animations/MercenaryRed.res" id="4_xbvib"]
+[ext_resource type="Texture2D" uid="uid://mqdx538n04vt" path="res://Sprites/General/CombatBackgrounds/FullHPBlip.png" id="5_5ubms"]
+[ext_resource type="AnimationLibrary" uid="uid://due623vpymjbh" path="res://SpriteFrames/Animations/MercenaryGreen.res" id="5_l4pdi"]
+[ext_resource type="Texture2D" uid="uid://c5iby31w6q0og" path="res://Sprites/General/CombatBackgrounds/BlueRightCombatName.png" id="6_0sdv7"]
+[ext_resource type="Texture2D" uid="uid://5gffol8wsjaa" path="res://Sprites/General/CombatBackgrounds/BlueRightMainCombatCrit.png" id="7_msexx"]
+[ext_resource type="Texture2D" uid="uid://b238ks4pgdap1" path="res://Sprites/Animations/Lord/eirika_lord5-sword-genericblue0.tres" id="9_3hpbh"]
+[ext_resource type="AnimationLibrary" uid="uid://c3s5m84w1owah" path="res://SpriteFrames/Animations/Lord.res" id="9_uxifu"]
+[ext_resource type="Material" uid="uid://qlmlhjvufst4" path="res://Shader/ProgressBarTile2.tres" id="47_vx1t4"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ag5st"]
+
+[node name="BattleScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uxifu")
+metadata/_edit_vertical_guides_ = [120.0]
+metadata/_edit_horizontal_guides_ = [80.0, -11.0, 106.0]
+
+[node name="Backgrouond" type="TextureRect" parent="."]
+modulate = Color(0, 0, 0, 0.313726)
+layout_mode = 1
+offset_left = -120.0
+offset_top = -80.0
+offset_right = 360.0
+offset_bottom = 240.0
+texture = SubResource("CanvasTexture_ag5st")
+
+[node name="LeftControl" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Platfrom" type="TextureRect" parent="LeftControl"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 87.0
+offset_right = 120.0
+offset_bottom = 127.0
+texture = ExtResource("1_msexx")
+
+[node name="Node2D" type="Node2D" parent="LeftControl"]
+position = Vector2(95, 83)
+
+[node name="Sprite2D" type="Sprite2D" parent="LeftControl/Node2D"]
+z_index = 10
+position = Vector2(0, -10)
+scale = Vector2(-1, 1)
+texture = ExtResource("3_xbvib")
+offset = Vector2(0, -0.5)
+region_rect = Rect2(0, 0, 29, 67)
+
+[node name="WeaponUnder" type="Sprite2D" parent="LeftControl/Node2D/Sprite2D"]
+z_index = -1
+position = Vector2(-28, 4)
+offset = Vector2(0.999999, 0.5)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LeftControl/Node2D"]
+libraries = {
+&"": ExtResource("4_xbvib"),
+&"MercenaryGreen": ExtResource("5_l4pdi")
+}
+speed_scale = 3.0
+
+[node name="NamePanel" type="Panel" parent="LeftControl"]
+layout_mode = 1
+offset_left = -5.0
+offset_top = 5.0
+offset_right = 45.0
+offset_bottom = 25.0
+
+[node name="Background" type="TextureRect" parent="LeftControl/NamePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_b10qc")
+
+[node name="Label" type="Label" parent="LeftControl/NamePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -17.0
+offset_top = -10.0
+offset_right = 23.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 9
+text = "马可波罗"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InfoPanel" type="Panel" parent="LeftControl"]
+layout_mode = 1
+offset_top = 121.0
+offset_right = 40.0
+offset_bottom = 161.0
+
+[node name="Background" type="TextureRect" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_left = -3.0
+offset_top = -13.0
+offset_right = 120.0
+offset_bottom = 39.0
+texture = ExtResource("3_ys8d6")
+
+[node name="HitLabel" type="Label" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = -11.0
+offset_right = 68.0
+offset_bottom = 12.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+
+[node name="DmgLabel" type="Label" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = -3.0
+offset_right = 68.0
+offset_bottom = 20.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+
+[node name="CrtLabel" type="Label" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 5.0
+offset_right = 68.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+
+[node name="WeaponLabel" type="Label" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_left = 57.0
+offset_top = -4.0
+offset_right = 105.0
+offset_bottom = 19.0
+theme_override_colors/font_color = Color(0.27451, 0.290196, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 9
+text = "铁剑"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HpLabel" type="Label" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 40.0
+offset_bottom = 39.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HpProgressBar" type="TextureProgressBar" parent="LeftControl/InfoPanel"]
+material = ExtResource("4_3aoi4")
+layout_mode = 0
+offset_left = 26.0
+offset_top = 24.0
+offset_right = 38.0
+offset_bottom = 31.0
+scale = Vector2(5, 1)
+value = 100.0
+texture_progress = ExtResource("5_5ubms")
+
+[node name="RightControl" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 240.0
+offset_right = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Platfrom" type="TextureRect" parent="RightControl"]
+layout_mode = 0
+offset_left = -33.0
+offset_top = 87.0
+offset_right = 54.0
+offset_bottom = 127.0
+scale = Vector2(-1, 1)
+texture = ExtResource("1_msexx")
+
+[node name="Node2D" type="Node2D" parent="RightControl"]
+position = Vector2(-95, 84)
+
+[node name="Sprite2D" type="Sprite2D" parent="RightControl/Node2D"]
+z_index = 10
+texture = ExtResource("9_3hpbh")
+
+[node name="WeaponUnder" type="Sprite2D" parent="RightControl/Node2D/Sprite2D"]
+z_index = -1
+position = Vector2(-28, 4)
+offset = Vector2(0.5, 0.5)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RightControl/Node2D"]
+libraries = {
+&"": ExtResource("9_uxifu")
+}
+
+[node name="NamePanel" type="Panel" parent="RightControl"]
+layout_mode = 1
+offset_left = -46.0
+offset_top = 5.0
+offset_right = 4.0
+offset_bottom = 25.0
+
+[node name="Background" type="TextureRect" parent="RightControl/NamePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_0sdv7")
+
+[node name="Label" type="Label" parent="RightControl/NamePanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -10.0
+offset_right = 18.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 9
+text = "马可波罗"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InfoPanel" type="Panel" parent="RightControl"]
+layout_mode = 1
+offset_left = -117.0
+offset_top = 121.0
+offset_right = -77.0
+offset_bottom = 161.0
+
+[node name="Background" type="TextureRect" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_left = -3.0
+offset_top = -13.0
+offset_right = 120.0
+offset_bottom = 39.0
+texture = ExtResource("7_msexx")
+
+[node name="HitLabel" type="Label" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = -11.0
+offset_right = 145.0
+offset_bottom = 12.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+
+[node name="DmgLabel" type="Label" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = -3.0
+offset_right = 145.0
+offset_bottom = 20.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+
+[node name="CrtLabel" type="Label" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 5.0
+offset_right = 145.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+
+[node name="WeaponLabel" type="Label" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = -4.0
+offset_right = 62.0
+offset_bottom = 19.0
+theme_override_colors/font_color = Color(0.27451, 0.290196, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 9
+text = "铁剑"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HpLabel" type="Label" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 40.0
+offset_bottom = 39.0
+theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
+theme_override_fonts/font = ExtResource("1_dw4xc")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HpProgressBar" type="TextureProgressBar" parent="RightControl/InfoPanel"]
+material = ExtResource("47_vx1t4")
+layout_mode = 0
+offset_left = 26.0
+offset_top = 24.0
+offset_right = 38.0
+offset_bottom = 31.0
+scale = Vector2(5, 1)
+value = 100.0
+texture_progress = ExtResource("5_5ubms")
+
+[node name="HitFlashColorRect" type="ColorRect" parent="."]
+visible = false
+z_index = 4096
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 160.0

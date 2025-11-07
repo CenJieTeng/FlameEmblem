@@ -7,8 +7,11 @@ enum UI_NAME
 	UNIT_MENU,
 	LEVEL_PASS_UI,
 	SELECT_DEPLOY_UNIT_UI,
+	UNIT_FIGHT_INFO_UI,
+	BATTLE_SCENE_UI
 }
 
+var window_size : Vector2
 var ui_dict : Dictionary[UI_NAME, BaseUI]
 var ui_input_handlers : Array[BaseUI]
 
@@ -17,6 +20,8 @@ var ui_name_dict = {
 	UI_NAME.UNIT_MENU : "UnitMenu",
 	UI_NAME.LEVEL_PASS_UI: "LevelPassUI",
 	UI_NAME.SELECT_DEPLOY_UNIT_UI: "SelectDeployUnitUI",
+	UI_NAME.UNIT_FIGHT_INFO_UI: "UnitFightInfoUI",
+	UI_NAME.BATTLE_SCENE_UI: "BattleSceneUI",
 }
 
 func _ready() -> void:
@@ -24,6 +29,15 @@ func _ready() -> void:
 		ui_dict.clear()
 		ui_input_handlers.clear()
 	)
+	window_size = get_viewport().get_visible_rect().size / DisplayServer.screen_get_scale()
+
+func get_ui(ui_name: UI_NAME) -> BaseUI:
+	if ui_dict.has(ui_name):
+		return ui_dict[ui_name]
+	return null
+
+func get_window_size() -> Vector2:
+	return window_size
 
 func register_ui(ui_name: UI_NAME, ui: BaseUI):
 	if ui_dict.has(ui_name):

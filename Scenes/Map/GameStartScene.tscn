@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://brjbydyrgejn5"]
 
-[ext_resource type="SpriteFrames" uid="uid://dn0ivkxx0xknx" path="res://Sprites/Animation/TitleBackground.tres" id="1_bj5uk"]
+[ext_resource type="SpriteFrames" uid="uid://dn0ivkxx0xknx" path="res://SpriteFrames/TitleBackground.tres" id="1_bj5uk"]
 [ext_resource type="Script" uid="uid://3f22g0iyqp8w" path="res://Scripts/Scene/GameStart.gd" id="1_x5dox"]
 [ext_resource type="Texture2D" uid="uid://cwtix7bxvki77" path="res://Sprites/Logo.png" id="2_jy005"]
-[ext_resource type="SpriteFrames" uid="uid://80oirboajji5" path="res://Sprites/Animation/PressStart.tres" id="2_l1312"]
+[ext_resource type="SpriteFrames" uid="uid://80oirboajji5" path="res://SpriteFrames/PressStart.tres" id="2_l1312"]
 [ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="4_tu7dt"]
 
 [node name="Node2D" type="Node2D"]

@@ -31,6 +31,7 @@ func create_battle_unit(unit: Unit) -> BattleUnit:
 class BattleResult:
 	var attacker : BattleUnit
 	var defender : BattleUnit
+	var show_attr_dict : Dictionary
 	var round_results : Array[RoundResult]
 
 
@@ -38,16 +39,22 @@ class RoundResult:
 	var attacker : BattleUnit
 	var defender : BattleUnit
 	var damage : int
+	var origin_hp : int
 	var hp : int
 	var is_miss : bool
 	var is_critical : bool
 	var is_skill : bool
 
 
+var skip_battle_anim : bool = false
 var preare_data : Dictionary
+var battle_scene : BattleSceneUI
 
 func _ready() -> void:
 	add_user_signal("hp_changed", [TYPE_STRING, TYPE_INT, TYPE_INT])
+
+func is_skip_battle_anim() -> bool:
+	return skip_battle_anim
 
 func battle(attacker: Unit, defender: Unit):
 	# 准备数据
@@ -58,7 +65,19 @@ func battle(attacker: Unit, defender: Unit):
 
 	# 战斗表现
 	present_battle_result(battle_result)
-	await present_battle_result_skip_anim(battle_result)
+	if skip_battle_anim:
+		var unit_fight_info_ui = UIManager.get_ui(UIManager.UI_NAME.UNIT_FIGHT_INFO_UI) as UnitFightInfoUI
+		unit_fight_info_ui.init(self, attacker, defender)
+		unit_fight_info_ui.open_ui()
+		await present_battle_result_skip_anim(battle_result)
+		await get_tree().create_timer(1).timeout
+		unit_fight_info_ui.close_ui()
+	else:
+		battle_scene = UIManager.get_ui(UIManager.UI_NAME.BATTLE_SCENE_UI) as BattleSceneUI
+		battle_scene.init(self, attacker, defender, battle_result)
+		battle_scene.open_ui()
+		await present_battle_result_anim(battle_result)
+		battle_scene.close_ui()
 
 	# 应用结果
 	apply_battle_result(battle_result)
@@ -80,14 +99,31 @@ func calc_damage(attacker: BattleUnit, defender: BattleUnit) -> int:
 	return damage
 
 func calc_hit_rate(attacker: BattleUnit, defender: BattleUnit) -> int:
-	return 0
 	var hit_rate = 80 + (attacker.skill * 2) + (attacker.luck / 2) - (defender.speed * 2) - (defender.luck / 2)
 	return clamp(hit_rate, 0, 100)
+
+func calc_critical_rate(attacker: BattleUnit, defender: BattleUnit) -> int:
+	var critical_rate = 10 + (attacker.luck * 2) - (defender.luck * 2)
+	print("critical_rate %d" % critical_rate)
+	return clamp(critical_rate, 0, 100)
 
 func simulate_battle(attacker: BattleUnit, defender: BattleUnit) -> BattleResult:
 	var battle_result = BattleResult.new()
 	battle_result.attacker = attacker
 	battle_result.defender = defender
+	battle_result.show_attr_dict = {
+		attacker.unit_name : {
+			"hit_rate" : calc_hit_rate(attacker, defender),
+			"damage" : calc_damage(attacker, defender),
+			"critical_rate" : calc_critical_rate(attacker, defender)
+		},
+		defender.unit_name : {
+			"hit_rate" : calc_hit_rate(defender, attacker),
+			"damage" : calc_damage(defender, attacker),
+			"critical_rate" : calc_critical_rate(defender, attacker)
+		}
+	}
+
 
 	var attaacker_round_result = simulate_round(attacker, defender)
 	battle_result.round_results.append(attaacker_round_result)
@@ -102,6 +138,7 @@ func simulate_round(attacker: BattleUnit, defender: BattleUnit) -> RoundResult:
 	var round_result = RoundResult.new()
 	round_result.attacker = attacker
 	round_result.defender = defender
+	round_result.origin_hp = defender.hp
 
 	var hit_rate = calc_hit_rate(attacker, defender)
 	var roll = randi() % 100
@@ -139,18 +176,6 @@ func present_battle_result(battle_result: BattleResult):
 		print("--------------------------")
 	print("战斗结束")
 
-func present_battle_result_skip_anim(battle_result: BattleResult):
-	var attacker_real_unit = preare_data["attacker_real_unit"]
-	var defender_real_unit = preare_data["defender_real_unit"]
-
-	for round_result in battle_result.round_results:
-		var attacker = round_result.attacker
-		#var defender = round_result.defender
-		if attacker.unit_name == attacker_real_unit.unit_name:
-			await attack_anim(round_result, attacker_real_unit, defender_real_unit)
-		else:
-			await attack_anim(round_result, defender_real_unit, attacker_real_unit)
-
 
 func apply_battle_result(battle_result: BattleResult):
 	var attacker_unit = preare_data["attacker_real_unit"] as Unit
@@ -174,6 +199,20 @@ func check_unit_alive(defender_real_unit: Unit, attacker_real_unit: Unit):
 			defender_real_unit.die()
 		)
 
+##------------------------------无动画表现
+
+func present_battle_result_skip_anim(battle_result: BattleResult):
+	var attacker_real_unit = preare_data["attacker_real_unit"]
+	var defender_real_unit = preare_data["defender_real_unit"]
+
+	for round_result in battle_result.round_results:
+		var attacker = round_result.attacker
+		#var defender = round_result.defender
+		if attacker.unit_name == attacker_real_unit.unit_name:
+			await attack_skip_anim(round_result, attacker_real_unit, defender_real_unit)
+		else:
+			await attack_skip_anim(round_result, defender_real_unit, attacker_real_unit)
+
 func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, loops: int = 3):
 	var shake = create_tween().set_loops(loops)
 
@@ -187,7 +226,7 @@ func shake_target(target: Node, strength: float = 10.0, duration: float = 0.15, 
 	shake.tween_property(target, "rotation", 0, duration * 0.33).set_trans(Tween.TRANS_SINE)
 	await shake.finished
 
-func attack_anim(round_result: RoundResult, attacker_real_unit: Unit, defender_real_unit: Unit):
+func attack_skip_anim(round_result: RoundResult, attacker_real_unit: Unit, defender_real_unit: Unit):
 	var attack_z_index = attacker_real_unit.z_index
 	var target_z_index = defender_real_unit.z_index
 	attacker_real_unit.z_index = 100 * attacker_real_unit.grid_position.y + 1
@@ -276,3 +315,22 @@ func attack_anim(round_result: RoundResult, attacker_real_unit: Unit, defender_r
 
 	attacker_real_unit.z_index = attack_z_index
 	defender_real_unit.z_index = target_z_index
+
+
+#------------------------------有动画表现
+
+func present_battle_result_anim(battle_result: BattleResult):
+	var attacker_real_unit = preare_data["attacker_real_unit"]
+	var defender_real_unit = preare_data["defender_real_unit"]
+
+	for round_result in battle_result.round_results:
+		var attacker = round_result.attacker
+		#var defender = round_result.defender
+		if attacker.unit_name == attacker_real_unit.unit_name:
+			await attack_anim(round_result, attacker_real_unit, defender_real_unit)
+		else:
+			await attack_anim(round_result, defender_real_unit, attacker_real_unit)
+
+func attack_anim(round_result: RoundResult, attacker_real_unit: Unit, defender_real_unit: Unit):
+	await battle_scene.play_battle_animation(round_result, attacker_real_unit)
+	await get_tree().create_timer(0.5).timeout

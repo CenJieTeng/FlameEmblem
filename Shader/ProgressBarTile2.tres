@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://qlmlhjvufst4"]
+
+[ext_resource type="Shader" uid="uid://cq5xkcu8epdca" path="res://Shader/ProgressBarTile.gdshader" id="1_ifqml"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_61fk1"]
+load_path = "res://.godot/imported/FullHPBlip.png-c31a392bc65a121ab233f4feaa4b8b47.ctex"
+
+[resource]
+shader = ExtResource("1_ifqml")
+shader_parameter/albedo_texture = SubResource("CompressedTexture2D_61fk1")
+shader_parameter/tile_count = 5.0
+shader_parameter/progress = 1.0
+shader_parameter/empty_color = Color(0, 0, 0, 0.3)

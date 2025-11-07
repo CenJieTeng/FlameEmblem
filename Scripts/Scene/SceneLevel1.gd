@@ -11,7 +11,7 @@ func setup_level():
 
 	
 	game_manager.create_unit("敌人1", Vector2i(2, 4), Unit.UnitCamp.ENEMY)
-	#game_manager.create_unit("敌人1", Vector2i(4, 4), Unit.UnitCamp.ENEMY)
+	game_manager.create_unit("敌人2", Vector2i(2, 5), Unit.UnitCamp.ENEMY)
 	game_manager.cursor.set_pos2(Vector2i(3, 4))
 	game_manager.max_wave = 3
 	game_manager.wave_info_ui.init(game_manager.max_wave, "胜利")

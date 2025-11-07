@@ -1,4 +1,5 @@
-extends Control
+extends BaseUI
+class_name UnitFightInfoUI
 
 @onready var name_node1 = $Panel1/Name1
 @onready var hp_label1 = $Panel1/HP1
@@ -10,22 +11,35 @@ extends Control
 
 var unit_ui_dict = {}
 
-func init(battle_system: BattleSystem, unit1: Unit, unit2: Unit):
-	unit_ui_dict[unit1.unit_name] = {
+func get_ui_name():
+	return UIManager.UI_NAME.UNIT_FIGHT_INFO_UI
+
+func init(battle_system: BattleSystem, attack_unit: Unit, defend_unit: Unit):
+	unit_ui_dict[attack_unit.unit_name] = {
 		"name_node": name_node1,
 		"hp_label": hp_label1,
 		"hp_progress": hp_progress1
 	}
-	unit_ui_dict[unit2.unit_name] = {
+	unit_ui_dict[defend_unit.unit_name] = {
 		"name_node": name_node2,
 		"hp_label": hp_label2,
 		"hp_progress": hp_progress2
 	}
-	update_info(unit1.unit_name, unit1.get_stats().hp, unit1.get_stats().max_hp)
-	update_info(unit2.unit_name, unit2.get_stats().hp, unit2.get_stats().max_hp)
+	update_info(attack_unit.unit_name, attack_unit.get_stats().hp, attack_unit.get_stats().max_hp)
+	update_info(defend_unit.unit_name, defend_unit.get_stats().hp, defend_unit.get_stats().max_hp)
 
 	if not battle_system.is_connected("hp_changed", update_info):
 		battle_system.connect("hp_changed", update_info)
+
+	var window_size = UIManager.get_window_size()
+	if attack_unit.position.y < window_size.y / 2:
+		position = Vector2(window_size.x/2, window_size.y * 4 / 5)
+	else:
+		position = Vector2(window_size.x/2, window_size.y / 5)
+
+func open_ui():
+	super()
+	
 
 func update_info(unit_name: String, hp: int, max_hp: int):
 	unit_ui_dict[unit_name]["name_node"].text = unit_name

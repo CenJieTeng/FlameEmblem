@@ -1,10 +1,12 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=6 format=3 uid="uid://00bgm012ejn0"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=8 format=3 uid="uid://00bgm012ejn0"]
 
+[ext_resource type="AnimationLibrary" uid="uid://c3s5m84w1owah" path="res://SpriteFrames/Animations/Lord.res" id="1_ajdl7"]
 [ext_resource type="Script" uid="uid://b3b2wswpk7da0" path="res://Scripts/UnitData.gd" id="1_e4nqp"]
 [ext_resource type="Texture2D" uid="uid://dd0d1hs1cu3l8" path="res://Sprites/Characters/PlayerCharacters/EirikaPortrait.png" id="1_qehqf"]
 [ext_resource type="Texture2D" uid="uid://pm21pkg57y4h" path="res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF.png" id="2_tbdjl"]
 [ext_resource type="Texture2D" uid="uid://6dmy8214hymc" path="res://Sprites/Characters/MapSprites/Lord/playerEirika_LordF_move.png" id="3_ajdl7"]
 [ext_resource type="Resource" uid="uid://dy1mv0hfhr0ws" path="res://Resource/UnitStats/unit_default_stats.tres" id="5_tbdjl"]
+[ext_resource type="Texture2D" uid="uid://be0c8tpjo3v6t" path="res://Sprites/Animations/Lord/eirika_lord5-magicsword-genericblue_0.tres" id="6_1iwv8"]
 
 [resource]
 script = ExtResource("1_e4nqp")
@@ -12,6 +14,8 @@ unit_name = "角色3"
 head_texture = ExtResource("1_qehqf")
 idea_texture = ExtResource("2_tbdjl")
 move_texture = ExtResource("3_ajdl7")
+standby_texture = ExtResource("6_1iwv8")
+animation_library = ExtResource("1_ajdl7")
 stats = ExtResource("5_tbdjl")
 hp = 0
 level = 1

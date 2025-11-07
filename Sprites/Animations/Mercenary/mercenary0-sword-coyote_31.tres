@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://cl5q3ny2bgcp2"]
+
+[ext_resource type="Texture2D" uid="uid://bcmdda6dcsqg6" path="res://Sprites/Animations/Mercenary/Mercenary0-Sword-Coyote.png" id="1_drng8"]
+
+[resource]
+atlas = ExtResource("1_drng8")
+region = Rect2(1043, 0, 30, 97)

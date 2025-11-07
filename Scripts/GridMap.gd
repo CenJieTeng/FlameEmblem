@@ -54,7 +54,7 @@ func create_moveable_sprites(grid_list: Array[Vector2i]):
 
 func _create_moveable_sprite(grid: Vector2i):
 	var anim = AnimatedSprite2D.new()
-	anim.sprite_frames = preload("res://Sprites/Animation/BlueHightLight.tres")
+	anim.sprite_frames = preload("res://SpriteFrames/BlueHightLight.tres")
 	anim.play("default")
 	anim.position = grid_to_world(grid)
 	move_layer.add_child(anim)
@@ -65,7 +65,7 @@ func create_attackable_sprites(grid_list: Array[Vector2i]):
 	
 func _create_attackable_sprite(grid: Vector2i):
 	var anim = AnimatedSprite2D.new()
-	anim.sprite_frames = preload("res://Sprites/Animation/RedHightLight.tres")
+	anim.sprite_frames = preload("res://SpriteFrames/RedHightLight.tres")
 	anim.play("default")
 	anim.position = grid_to_world(grid)
 	move_layer.add_child(anim)

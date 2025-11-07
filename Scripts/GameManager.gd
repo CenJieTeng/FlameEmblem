@@ -126,6 +126,9 @@ func _on_unit_signal(unit: Unit, action: String):
 	if action == "move_complate":
 		update_unit_pos_map()
 		show_menu()
+	if action == "die":
+		unit_list.erase(unit)
+		update_unit_pos_map()
 	if action == "standby" or action == "die":
 		check_game_win_or_lose()
 		if game_state == GameState.GAME_FINISH:
@@ -133,9 +136,6 @@ func _on_unit_signal(unit: Unit, action: String):
 		check_wave_finish()
 		if current_wave_camp == Unit.UnitCamp.PLAYER:
 			play_state = PlayState.NONE
-	if action == "die":
-		unit_list.erase(unit)
-		update_unit_pos_map()
 
 func _on_cursor_pos_change():
 	cursor_dir = grid_map.get_direction_to_center_from_grid(cursor.pos)
@@ -399,23 +399,12 @@ func select_menu_item(index: int):
 
 func fight(attack_unit: Unit, target_unit: Unit):
 	game_state = GameState.GAME_RUNING
-
-	unit_fight_info_ui.visible = true
-	unit_fight_info_ui.init(battle_system, attack_unit, target_unit)
-	
-	if attack_unit.position.y < window_size.y / 2:
-		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y * 4 / 5)
-	else:
-		unit_fight_info_ui.position = Vector2(window_size.x/2, window_size.y / 5)
 	
 	await battle_system.battle(attack_unit, target_unit)
 
 	UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 	current_unit = null
 	target_unit = null
-
-	await get_tree().create_timer(1).timeout
-	unit_fight_info_ui.visible = false
-	
+		
 	if attack_unit:
 		push_command(UnitStandbyCommand.new(attack_unit))

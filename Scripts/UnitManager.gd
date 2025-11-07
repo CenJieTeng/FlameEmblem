@@ -15,7 +15,7 @@ var sprite_frams_map : Dictionary[String, SpriteFrames]
 
 func create_sprite_frames():
 	for unit_name in UnitManager.unit_dict.keys():
-		var sprite_frames = load("res://Sprites/Animation/UnitSpriteFrames/Lord.tres").duplicate(true) as SpriteFrames
+		var sprite_frames = load("res://SpriteFrames/UnitMapSpriteFrames/Lord.tres").duplicate(true) as SpriteFrames
 		create_idle_anim(unit_name, sprite_frames)
 		create_move_anim(unit_name, sprite_frames)
 		sprite_frams_map[unit_name] = sprite_frames

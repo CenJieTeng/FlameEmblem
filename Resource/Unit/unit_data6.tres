@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=8 format=3 uid="uid://bp1bdh7q62bob"]
+
+[ext_resource type="AnimationLibrary" uid="uid://due623vpymjbh" path="res://SpriteFrames/Animations/MercenaryGreen.res" id="1_8nkmq"]
+[ext_resource type="Texture2D" uid="uid://bj7uptkp0v8ix" path="res://Sprites/Characters/PlayerCharacters/FordePortrait.png" id="2_bwc2r"]
+[ext_resource type="Texture2D" uid="uid://cyf6blc36op4p" path="res://Sprites/Characters/MapSprites/Mercenary/otherMercenaryM.png" id="3_bwc2r"]
+[ext_resource type="Texture2D" uid="uid://jtsljh4ycrgf" path="res://Sprites/Characters/MapSprites/Mercenary/otherMercenaryM_move.png" id="4_83u2c"]
+[ext_resource type="Script" uid="uid://b3b2wswpk7da0" path="res://Scripts/UnitData.gd" id="5_5fx8n"]
+[ext_resource type="Resource" uid="uid://dy1mv0hfhr0ws" path="res://Resource/UnitStats/unit_default_stats.tres" id="6_1tqdm"]
+[ext_resource type="Texture2D" uid="uid://75cjt2ll6jl" path="res://Sprites/Animations/Mercenary/mercenary0-magicsword-genericgreen_0.tres" id="6_bwc2r"]
+
+[resource]
+script = ExtResource("5_5fx8n")
+unit_name = "敌人2"
+head_texture = ExtResource("2_bwc2r")
+idea_texture = ExtResource("3_bwc2r")
+move_texture = ExtResource("4_83u2c")
+standby_texture = ExtResource("6_bwc2r")
+animation_library = ExtResource("1_8nkmq")
+stats = ExtResource("6_1tqdm")
+hp = 0
+level = 1
+experience = 0
+metadata/_custom_type_script = "uid://b3b2wswpk7da0"
