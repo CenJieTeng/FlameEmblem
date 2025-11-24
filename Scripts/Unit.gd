@@ -57,6 +57,12 @@ func get_stats() -> UnitStats:
 	total_stats = total_stats.add(level_manager.get_stats())
 	return total_stats
 
+func get_move_range():
+	return get_stats().mov
+
+func get_attack_range():
+	return 1  # 目前只支持近战攻击，攻击范围为1
+
 func hurt(damage : int):
 	unit_stats.hp -= damage
 	if unit_stats.hp < 0:
@@ -75,7 +81,9 @@ func is_alive():
 func die():
 	emit_signal("unit_signal", self, "die")
 	save_data()
-	queue_free()
+	#queue_free()
+	if is_instance_valid(get_parent()):
+		get_parent().remove_child(self)
 
 func save_data():
 	level_manager.save_data(unit_data)
@@ -114,31 +122,7 @@ func get_move_path(walkable_cells: Array[Vector2i], start: Vector2i, end: Vector
 	return path
 	
 func calc_moveable():
-	moveable_grids.clear()
-	var queue = []
-	var visited = {}
-	queue.push_back({"pos": grid_position, "move_cost": 0})
-	while not queue.is_empty():
-		var current = queue.pop_front()
-		
-		if current.move_cost < get_stats().mov:
-			for dir in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
-				var next_pos = current.pos + dir
-				
-				if visited.has(next_pos):
-					continue
-					
-				var terrain_data = grid_map.get_terrain_data(next_pos)
-				if not terrain_data or current.move_cost + terrain_data.move_cost > get_stats().mov:
-					continue
-					
-				var unit = game_manager.get_unit_by_grid(next_pos)
-				if unit and unit.camp != camp:
-					continue
-					
-				visited[next_pos] = true
-				moveable_grids.append(next_pos)
-				queue.push_back({"pos": next_pos, "move_cost": current.move_cost + terrain_data.move_cost})
+	moveable_grids = grid_map.calc_moveable(grid_position, get_stats().mov, camp)
 
 func show_moveable():
 	grid_map.create_moveable_sprites(moveable_grids)

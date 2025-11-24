@@ -83,6 +83,7 @@ func init(p_battle_system: BattleSystem, p_attacker_unit: Unit, p_defender_unit:
 	left_unit_crt_label.text = str(battle_result.show_attr_dict[enemy_unit.unit_name]["critical_rate"])
 	update_hp_bar(SIDE.LEFT, enemy_unit.get_stats().hp, enemy_unit.get_stats().max_hp)
 	left_unit_anim_player.remove_animation_library("")
+	left_unit_anim_player.clear_caches()
 	left_unit_anim_player.add_animation_library("",enemy_unit.unit_data.animation_library)
 	left_unit_anim_player.play("RESET")
 
@@ -92,6 +93,7 @@ func init(p_battle_system: BattleSystem, p_attacker_unit: Unit, p_defender_unit:
 	right_unit_crt_label.text = str(battle_result.show_attr_dict[play_unit.unit_name]["critical_rate"])
 	update_hp_bar(SIDE.RIGHT, play_unit.get_stats().hp, play_unit.get_stats().max_hp)
 	right_unit_anim_player.remove_animation_library("")
+	right_unit_anim_player.clear_caches()
 	right_unit_anim_player.add_animation_library("",play_unit.unit_data.animation_library)
 	right_unit_anim_player.play("RESET")
 

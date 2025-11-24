@@ -10,9 +10,12 @@ class_name GameManager
 @onready var wave_info_ui : Control = $"../CanvasLayer/WaveInfoUI"
 @onready var cursor : Cursor = $"../Cursor"
 @onready var battle_system : BattleSystem = $"../BattleSystem"
+@onready var ai_manager : AIManager = $"../AIManager"
 
 var cursor_dir : Vector2
 var window_size
+var is_processing_input := false
+var is_wave_finish := false
 
 # 单位相关
 var unit_list : Array[Unit] = []
@@ -78,6 +81,9 @@ func _ready() -> void:
 	cursor.connect("pos_change", _on_cursor_pos_change)	
 	check_hud_state()
 
+	grid_map.init(self)
+	ai_manager.init(self)
+	
 	SceneManager.connect("pre_scene_change", func():
 		for unit in unit_list:
 			unit.save_data()
@@ -91,16 +97,21 @@ func handle_game_input():
 		UIManager.open(UIManager.UI_NAME.CONSOLE)
 		return
 		
+	if is_processing_input || is_wave_finish:
+		return
+	is_processing_input = true
+
 	var command : UnitCommand = null
 	match game_state:
 		GameState.WAITING_FOR_PLAYER:
 			command = handle_input()
 		GameState.WAITING_FOR_AI:
-			#command = handle_ai_input()
-			wave_finish()
+			await get_tree().create_timer(0.5).timeout
+			command = ai_manager.process_ai_turn()
 		GameState.GAME_RUNING:
 			pass
 	push_command(command)
+	is_processing_input = false
 
 func _draw():
 	var color = Color.NAVY_BLUE
@@ -187,7 +198,7 @@ func handle_input() -> UnitCommand:
 					var target = get_unit_by_grid(cursor.pos)
 					if target:
 						grid_map.clear_moveable_sprites()
-						fight(current_unit, target)	
+						return UnitAttackCommand.new(current_unit, target)
 
 	
 	if Input.is_action_just_pressed("mouse_right"):
@@ -237,7 +248,7 @@ func handle_ai_input():
 			return UnitStandbyCommand.new(enemy_unit)
 	return null
 
-func create_unit(p_name: String, grid: Vector2i, camp: Unit.UnitCamp) -> Unit:
+func create_unit(p_name: String, grid: Vector2i, camp: Unit.UnitCamp, strategy := AIBrain.AIStrategy.NONE) -> Unit:
 	if pos_to_unit_map.has(grid):
 		return pos_to_unit_map[grid]
 	var unit = preload("res://Scenes/Unit/Unit.tscn").instantiate() as Unit
@@ -246,6 +257,8 @@ func create_unit(p_name: String, grid: Vector2i, camp: Unit.UnitCamp) -> Unit:
 	unit_list.append(unit)
 	unit.connect("unit_signal", _on_unit_signal)
 	pos_to_unit_map[grid] = unit
+	if unit.camp != Unit.UnitCamp.PLAYER:
+		ai_manager.register_ai_unit(unit, strategy)
 	return unit
 	
 func select_unit(unit: Unit):
@@ -294,13 +307,21 @@ func check_game_win_or_lose():
 		return
 
 func check_wave_finish():
+	if is_wave_finish:
+		return
+
 	for unit in unit_list:
 		if unit.camp == current_wave_camp and not unit.is_standby:
 			return
+
 	wave_finish()
 
 func wave_finish():
 	print(Unit.UnitCamp.keys()[current_wave_camp], " 回合结束")
+
+	is_wave_finish = true
+	await get_tree().create_timer(1).timeout
+
 	current_unit = null
 	current_wave_camp = wave_camp[(current_wave_camp + 1) % wave_camp.size()]
 	wave_count += 1
@@ -320,6 +341,8 @@ func wave_finish():
 	for unit in unit_list:
 		unit.is_standby = false
 		unit.animator.material = null
+
+	is_wave_finish = false
 	
 func create_move_path_sprite(path: Array[Vector2i]):
 	move_path_layer.clear()

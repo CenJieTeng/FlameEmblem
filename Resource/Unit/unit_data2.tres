@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="UnitData" load_steps=8 format=3 uid="uid://bduqm7gqxoigt"]
+[gd_resource type="Resource" script_class="UnitData" load_steps=7 format=3 uid="uid://bduqm7gqxoigt"]
 
 [ext_resource type="AnimationLibrary" uid="uid://c3s5m84w1owah" path="res://SpriteFrames/Animations/Lord.res" id="1_1b0rw"]
 [ext_resource type="Script" uid="uid://b3b2wswpk7da0" path="res://Scripts/UnitData.gd" id="1_kbjpy"]
@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://dvioqd3gd0t0w" path="res://Sprites/Characters/MapSprites/Lord/playerEphraim_LordM.png" id="2_1ue5x"]
 [ext_resource type="Texture2D" uid="uid://cpft80mluysxc" path="res://Sprites/Characters/MapSprites/Lord/playerEphraim_LordM_move.png" id="3_1b0rw"]
 [ext_resource type="Resource" uid="uid://dy1mv0hfhr0ws" path="res://Resource/UnitStats/unit_default_stats.tres" id="5_1ue5x"]
-[ext_resource type="Texture2D" uid="uid://be0c8tpjo3v6t" path="res://Sprites/Animations/Lord/eirika_lord5-magicsword-genericblue_0.tres" id="6_un1sr"]
 
 [resource]
 script = ExtResource("1_kbjpy")
@@ -14,7 +13,6 @@ unit_name = "角色2"
 head_texture = ExtResource("1_q2m57")
 idea_texture = ExtResource("2_1ue5x")
 move_texture = ExtResource("3_1b0rw")
-standby_texture = ExtResource("6_un1sr")
 animation_library = ExtResource("1_1b0rw")
 stats = ExtResource("5_1ue5x")
 hp = 0

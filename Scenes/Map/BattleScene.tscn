@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dffn01nbjvaj8"]
+[gd_scene load_steps=16 format=3 uid="uid://dffn01nbjvaj8"]
 
 [ext_resource type="Texture2D" uid="uid://bawhrjoafm6r5" path="res://Sprites/General/CombatBackgrounds/RedLeftCombatName.png" id="1_b10qc"]
 [ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="1_dw4xc"]
@@ -9,7 +9,6 @@
 [ext_resource type="Material" uid="uid://c17vxla3mnv6h" path="res://Shader/ProgressBarTile.tres" id="4_3aoi4"]
 [ext_resource type="AnimationLibrary" uid="uid://bwpus7jpv7ui8" path="res://SpriteFrames/Animations/MercenaryRed.res" id="4_xbvib"]
 [ext_resource type="Texture2D" uid="uid://mqdx538n04vt" path="res://Sprites/General/CombatBackgrounds/FullHPBlip.png" id="5_5ubms"]
-[ext_resource type="AnimationLibrary" uid="uid://due623vpymjbh" path="res://SpriteFrames/Animations/MercenaryGreen.res" id="5_l4pdi"]
 [ext_resource type="Texture2D" uid="uid://c5iby31w6q0og" path="res://Sprites/General/CombatBackgrounds/BlueRightCombatName.png" id="6_0sdv7"]
 [ext_resource type="Texture2D" uid="uid://5gffol8wsjaa" path="res://Sprites/General/CombatBackgrounds/BlueRightMainCombatCrit.png" id="7_msexx"]
 [ext_resource type="Texture2D" uid="uid://b238ks4pgdap1" path="res://Sprites/Animations/Lord/eirika_lord5-sword-genericblue0.tres" id="9_3hpbh"]
@@ -72,8 +71,7 @@ offset = Vector2(0.999999, 0.5)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LeftControl/Node2D"]
 libraries = {
-&"": ExtResource("4_xbvib"),
-&"MercenaryGreen": ExtResource("5_l4pdi")
+&"": ExtResource("4_xbvib")
 }
 speed_scale = 3.0
 
@@ -356,3 +354,4 @@ z_index = 4096
 layout_mode = 0
 offset_right = 240.0
 offset_bottom = 160.0
+color = Color(1, 1, 1, 0.5)
