@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=3 format=3 uid="uid://bdnqv5pcyixkg"]
+
+[ext_resource type="Script" uid="uid://d17a8h0yonpw0" path="res://Scripts/Inventory/Weapon.gd" id="1_0mtu0"]
+[ext_resource type="Texture2D" uid="uid://cmcrynedb6to4" path="res://Sprites/Items/sword_3.tres" id="1_v66ab"]
+
+[resource]
+script = ExtResource("1_0mtu0")
+weapon_type = 1
+power = 7
+hit = 100
+crit = 10
+miss = 0
+atk_range = 1
+item_name = "银剑"
+item_type = 0
+icon_texture = ExtResource("1_v66ab")
+description = ""
+uses = 1
+metadata/_custom_type_script = "uid://d17a8h0yonpw0"

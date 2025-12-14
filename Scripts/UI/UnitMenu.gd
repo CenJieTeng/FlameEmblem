@@ -1,11 +1,12 @@
 extends BaseUI
 
-var init_offset := 5
+var init_offset := 11
 var offset := 13
 var index := 1
 var item_count := 3
 
 var game_manager : GameManager
+@onready var finger_ui := $FingerUI
 
 func _ready() -> void:
 	super._ready()
@@ -20,7 +21,7 @@ func is_handle_input():
 func open_ui():
 	super.open_ui()
 	index = 1
-	$TextureRect.position.y = init_offset
+	finger_ui.position.y = init_offset
 
 func handle_ui_input() -> bool:
 	if game_manager.play_state != GameManager.PlayState.SELECT_ACTION:
@@ -29,11 +30,11 @@ func handle_ui_input() -> bool:
 	if Input.is_action_just_pressed("up"):
 		index -= 1
 		index = clamp(index, 1, item_count)
-		$TextureRect.position.y = init_offset + offset * (index - 1)
+		finger_ui.position.y = init_offset + offset * (index - 1)
 	if Input.is_action_just_pressed("down"):
 		index += 1
 		index = clamp(index, 1, item_count)
-		$TextureRect.position.y = init_offset + offset * (index - 1)
+		finger_ui.position.y = init_offset + offset * (index - 1)
 	if Input.is_action_just_pressed("mouse_left"):
 		game_manager.select_menu_item(index)
 		

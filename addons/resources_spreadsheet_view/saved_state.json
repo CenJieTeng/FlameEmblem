@@ -11,6 +11,17 @@
         "visibility": 0.0
       }
     },
+    "res://Resource/Item/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
+      }
+    },
     "res://Resource/Unit/": {
       "metadata/_custom_type_script": {
         "visibility": 0.0
@@ -23,6 +34,17 @@
       },
       "stats": {
         "visibility": 1.0
+      }
+    },
+    "res://Resource/Unit/Unit/": {
+      "metadata/_custom_type_script": {
+        "visibility": 0.0
+      },
+      "resource_local_to_scene": {
+        "visibility": 0.0
+      },
+      "resource_name": {
+        "visibility": 0.0
       }
     },
     "res://Resource/Unit/Unit_table_import.tres": {
@@ -75,7 +97,8 @@
     "res://Resource/",
     "res://example/Items/",
     "res://Resource/Unit/",
-    "res://Resource/Unit/Unit_table_import.tres"
+    "res://Resource/Unit/Unit_table_import.tres",
+    "res://Resource/Item/"
   ],
   "table_functions": {
     "filter": [

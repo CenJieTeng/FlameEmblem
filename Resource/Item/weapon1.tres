@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Weapon" load_steps=3 format=3 uid="uid://cjq8asjf1lmgg"]
+
+[ext_resource type="Texture2D" uid="uid://b7rfqp62ylf6g" path="res://Sprites/Items/sword_0.tres" id="1_0iatg"]
+[ext_resource type="Script" uid="uid://d17a8h0yonpw0" path="res://Scripts/Inventory/Weapon.gd" id="1_y4enf"]
+
+[resource]
+script = ExtResource("1_y4enf")
+weapon_type = 1
+power = 5
+hit = 90
+crit = 5
+miss = 0
+atk_range = 1
+item_name = "铁剑"
+item_type = 0
+icon_texture = ExtResource("1_0iatg")
+description = ""
+uses = 2
+metadata/_custom_type_script = "uid://d17a8h0yonpw0"

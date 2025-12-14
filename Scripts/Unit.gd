@@ -13,6 +13,8 @@ var old_grid_position = Vector2i.ZERO
 var grid_position = Vector2i.ZERO
 var is_move := false
 var is_standby := false
+var weapon : Weapon
+
 var moveable_grids : Array[Vector2i] = []
 var move_path : Array[Vector2i] = []
 var simple_move_path : Array[Vector2i] = []
@@ -24,6 +26,7 @@ var unit_data : UnitData
 var unit_stats : UnitStats
 var animator : AnimatedSprite2D
 var level_manager : LevelManager
+var inventory : Inventory
 
 var head_texture : Texture
 
@@ -36,11 +39,23 @@ func _ready() -> void:
 		{ "unit": Unit, "action": TYPE_STRING },
 	])
 
+func _on_item_removed(item: Item) -> void:
+	if weapon == item:
+		weapon = null
+
 func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	unit_name = p_name
 	unit_data = UnitManager.unit_dict[unit_name].duplicate(true)
 	unit_stats = unit_data.stats
 	unit_stats._init()
+
+	inventory = unit_data.inventory
+	inventory.item_removed.connect(_on_item_removed)
+	inventory.add_item(ItemManager.create_item_instance("铁斧"))
+	inventory.add_item(ItemManager.create_item_instance("铁剑"))
+	inventory.add_item(ItemManager.create_item_instance("银剑"))
+	inventory.add_item(ItemManager.create_item_instance("银剑"))
+	weapon = inventory.get_item(0) as Weapon
 
 	grid_position = pos
 	camp = p_camp

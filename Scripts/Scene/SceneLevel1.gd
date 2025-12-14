@@ -11,6 +11,9 @@ func setup_level():
 
 	
 	game_manager.create_unit("敌人1", Vector2i(2, 2), Unit.UnitCamp.ENEMY, AIBrain.AIStrategy.STATIC)
+	game_manager.create_unit("敌人1", Vector2i(2, 3), Unit.UnitCamp.ENEMY, AIBrain.AIStrategy.STATIC)
+	game_manager.create_unit("敌人1", Vector2i(1, 4), Unit.UnitCamp.ENEMY, AIBrain.AIStrategy.STATIC)
+	game_manager.create_unit("敌人1", Vector2i(8, 4), Unit.UnitCamp.ENEMY, AIBrain.AIStrategy.STATIC)
 	game_manager.create_unit("敌人2", Vector2i(2, 5), Unit.UnitCamp.ENEMY, AIBrain.AIStrategy.AGGRESSIVE)
 	game_manager.cursor.set_pos2(Vector2i(3, 4))
 	game_manager.max_wave = 3

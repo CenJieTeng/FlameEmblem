@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dffn01nbjvaj8"]
+[gd_scene load_steps=17 format=3 uid="uid://dffn01nbjvaj8"]
 
 [ext_resource type="Texture2D" uid="uid://bawhrjoafm6r5" path="res://Sprites/General/CombatBackgrounds/RedLeftCombatName.png" id="1_b10qc"]
 [ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="1_dw4xc"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://mqdx538n04vt" path="res://Sprites/General/CombatBackgrounds/FullHPBlip.png" id="5_5ubms"]
 [ext_resource type="Texture2D" uid="uid://c5iby31w6q0og" path="res://Sprites/General/CombatBackgrounds/BlueRightCombatName.png" id="6_0sdv7"]
 [ext_resource type="Texture2D" uid="uid://5gffol8wsjaa" path="res://Sprites/General/CombatBackgrounds/BlueRightMainCombatCrit.png" id="7_msexx"]
+[ext_resource type="Texture2D" uid="uid://b7rfqp62ylf6g" path="res://Sprites/Items/sword_0.tres" id="8_l4pdi"]
 [ext_resource type="Texture2D" uid="uid://b238ks4pgdap1" path="res://Sprites/Animations/Lord/eirika_lord5-sword-genericblue0.tres" id="9_3hpbh"]
 [ext_resource type="AnimationLibrary" uid="uid://c3s5m84w1owah" path="res://SpriteFrames/Animations/Lord.res" id="9_uxifu"]
 [ext_resource type="Material" uid="uid://qlmlhjvufst4" path="res://Shader/ProgressBarTile2.tres" id="47_vx1t4"]
@@ -156,6 +157,14 @@ theme_override_colors/font_color = Color(0.909804, 0.972549, 0.847059, 1)
 theme_override_fonts/font = ExtResource("1_dw4xc")
 theme_override_font_sizes/font_size = 10
 text = "99"
+
+[node name="WeaponTexture" type="TextureRect" parent="LeftControl/InfoPanel"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = -1.0
+offset_right = 62.0
+offset_bottom = 15.0
+texture = ExtResource("8_l4pdi")
 
 [node name="WeaponLabel" type="Label" parent="LeftControl/InfoPanel"]
 layout_mode = 0
@@ -312,6 +321,15 @@ theme_override_fonts/font = ExtResource("1_dw4xc")
 theme_override_font_sizes/font_size = 10
 text = "99"
 
+[node name="WeaponTexture" type="TextureRect" parent="RightControl/InfoPanel"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = -1.0
+offset_right = 17.0
+offset_bottom = 15.0
+texture = ExtResource("8_l4pdi")
+stretch_mode = 3
+
 [node name="WeaponLabel" type="Label" parent="RightControl/InfoPanel"]
 layout_mode = 0
 offset_left = 14.0
@@ -324,6 +342,7 @@ theme_override_font_sizes/font_size = 9
 text = "铁剑"
 horizontal_alignment = 1
 vertical_alignment = 1
+metadata/_edit_lock_ = true
 
 [node name="HpLabel" type="Label" parent="RightControl/InfoPanel"]
 layout_mode = 0

@@ -16,6 +16,7 @@ class_name UnitData
 @export var hp : int
 @export var level : int = 1
 @export var experience : int = 0
+@export var inventory : Inventory = Inventory.new()
 
 func init(base_stats: Dictionary = {}) -> void:
 	stats._init(base_stats)

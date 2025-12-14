@@ -26,6 +26,9 @@ var move_path_gold_sprite : Sprite2D
 var unit_command_list : Array[UnitCommand] = []
 var select_unit_index = 0
 
+var attackable_unit_list : Array[Unit] = []
+var select_attack_index = 0
+
 # 回合相关
 var wave_count = 1
 var max_wave = 3
@@ -47,6 +50,7 @@ enum PlayState{
 	NONE,
 	SELECT_UNIT,
 	SELECT_ACTION,
+	SELECT_WEAPON,
 	SELECT_ATTACK_TARGET,
 	SELECT_USE_ITEM,
 }
@@ -62,6 +66,7 @@ enum EnemyState{
 var enemy_state := EnemyState.NONE
 
 var _skip_rollback_states = {
+	PlayState.SELECT_WEAPON: true,
 	PlayState.SELECT_ATTACK_TARGET: true,
 	PlayState.SELECT_USE_ITEM: true,
 }
@@ -193,10 +198,16 @@ func handle_input() -> UnitCommand:
 						grid_map.clear_moveable_sprites()
 						return UnitMoveCommand.new(current_unit, gold_grid)
 		PlayState.SELECT_ATTACK_TARGET:
+			if Input.is_action_just_pressed("left") or Input.is_action_just_pressed("up"):
+				select_attack_target(select_attack_index - 1)
+			if Input.is_action_just_pressed("right") or Input.is_action_just_pressed("down"):
+				select_attack_target(select_attack_index + 1)
+
 			if Input.is_action_just_pressed("mouse_left"):
 				if current_unit.is_in_attack_range(cursor.pos):
 					var target = get_unit_by_grid(cursor.pos)
 					if target:
+						UIManager.close(UIManager.UI_NAME.QUICK_ATTACK_INFO_UI)
 						grid_map.clear_moveable_sprites()
 						return UnitAttackCommand.new(current_unit, target)
 
@@ -231,10 +242,18 @@ func handle_input() -> UnitCommand:
 				UIManager.close(UIManager.UI_NAME.UNIT_MENU)
 				play_state = PlayState.SELECT_UNIT
 				select_unit(current_unit)
+			PlayState.SELECT_WEAPON:
+				cursor.set_pos2(current_unit.grid_position)
+				grid_map.clear_moveable_sprites()
+				UIManager.close(UIManager.UI_NAME.SELECT_WEAPON_UI)
+				UIManager.open(UIManager.UI_NAME.UNIT_MENU)
+				play_state = PlayState.SELECT_ACTION
 			PlayState.SELECT_ATTACK_TARGET:
 				cursor.set_pos2(current_unit.grid_position)
 				grid_map.clear_moveable_sprites()
-				play_state = PlayState.SELECT_ACTION
+				UIManager.close(UIManager.UI_NAME.QUICK_ATTACK_INFO_UI)
+				UIManager.open(UIManager.UI_NAME.SELECT_WEAPON_UI)
+				play_state = PlayState.SELECT_WEAPON
 	
 	return null
 	
@@ -412,13 +431,56 @@ func check_hud_state():
 func select_menu_item(index: int):
 	match index:
 		1:
-			play_state = PlayState.SELECT_ATTACK_TARGET
-			current_unit.clac_attckable2()
+			play_state = PlayState.SELECT_WEAPON
+			UIManager.open(UIManager.UI_NAME.SELECT_WEAPON_UI)
 		3:
 			push_command(UnitStandbyCommand.new(current_unit))
 			current_unit = null
 			play_state = PlayState.NONE
 			UIManager.close(UIManager.UI_NAME.UNIT_MENU)
+			
+func select_weapon_item(weapon: Weapon):
+	current_unit.weapon = weapon
+	play_state = PlayState.SELECT_ATTACK_TARGET
+	UIManager.close(UIManager.UI_NAME.SELECT_WEAPON_UI)
+	UIManager.close(UIManager.UI_NAME.UNIT_MENU)
+
+	current_unit.clac_attckable2()
+	attackable_unit_list.clear()
+	for grid in current_unit.attackable_grids:
+		var unit = get_unit_by_grid(grid)
+		if unit:
+			attackable_unit_list.append(unit)
+
+	var center_pos = current_unit.grid_position
+	attackable_unit_list.sort_custom(func(a: Unit, b: Unit) -> int:
+		var angle_a = (Vector2)(a.grid_position - center_pos).angle()
+		var angle_b = (Vector2)(b.grid_position - center_pos).angle()
+		print("unita: ", a.grid_position, "unitb: ", b.grid_position, "angle_a: ", angle_a, " angle_b: ", angle_b)
+		if angle_a < angle_b:
+			return true
+		elif angle_a > angle_b:
+			return false
+		else:
+			return sign((a - center_pos).length_squared() - (b - center_pos).length_squared())
+	)
+	select_attack_index = 0
+	select_attack_target(0)
+	UIManager.open(UIManager.UI_NAME.QUICK_ATTACK_INFO_UI)
+
+func select_attack_target(index: int):
+	if attackable_unit_list.size() == 0:
+		return
+	select_attack_index = index % attackable_unit_list.size()
+	var target_unit = attackable_unit_list[select_attack_index]
+	cursor.set_pos2(target_unit.grid_position)
+	var attack_info_ui = UIManager.get_ui(UIManager.UI_NAME.QUICK_ATTACK_INFO_UI)
+	var quick_battle_info = battle_system.quick_battle_info(current_unit, target_unit)
+	attack_info_ui.update_info(current_unit, target_unit, quick_battle_info)
+	if current_unit.position.x < window_size.x / 2:
+		attack_info_ui.position = Vector2(window_size.x - 69 - window_size.x / 20, window_size.y / 20)
+	else:
+		attack_info_ui.position = Vector2(window_size.x / 20, window_size.y / 20)
 
 func fight(attack_unit: Unit, target_unit: Unit):
 	game_state = GameState.GAME_RUNING

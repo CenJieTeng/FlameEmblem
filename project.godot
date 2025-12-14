@@ -36,13 +36,14 @@ InputManager="*res://Scripts/InputManager.gd"
 UIManager="*res://Scripts/UI/UIManager.gd"
 UnitManager="*res://Scripts/UnitManager.gd"
 SaveSystem="*res://Scripts/SaveSystem.gd"
+ItemManager="*res://Scripts/Inventory/ItemManager.gd"
 
 [display]
 
-window/size/viewport_width=768
-window/size/viewport_height=512
+window/size/viewport_width=720
+window/size/viewport_height=480
 window/stretch/mode="canvas_items"
-window/stretch/scale=3.2
+window/stretch/scale=3.0
 window/dynamic_fonts/use_oversampling=true
 window/snap/snap_2d_transforms_to_pixel=false
 

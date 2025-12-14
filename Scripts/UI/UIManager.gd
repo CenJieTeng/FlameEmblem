@@ -8,7 +8,9 @@ enum UI_NAME
 	LEVEL_PASS_UI,
 	SELECT_DEPLOY_UNIT_UI,
 	UNIT_FIGHT_INFO_UI,
-	BATTLE_SCENE_UI
+	BATTLE_SCENE_UI,
+	SELECT_WEAPON_UI,
+	QUICK_ATTACK_INFO_UI
 }
 
 var window_size : Vector2
@@ -22,6 +24,8 @@ var ui_name_dict = {
 	UI_NAME.SELECT_DEPLOY_UNIT_UI: "SelectDeployUnitUI",
 	UI_NAME.UNIT_FIGHT_INFO_UI: "UnitFightInfoUI",
 	UI_NAME.BATTLE_SCENE_UI: "BattleSceneUI",
+	UI_NAME.SELECT_WEAPON_UI: "SelectWeaponUI",
+	UI_NAME.QUICK_ATTACK_INFO_UI: "QuickAttackInfoUI"
 }
 
 func _ready() -> void:

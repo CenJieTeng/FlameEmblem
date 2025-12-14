@@ -27,7 +27,8 @@ func _ready() -> void:
 
 func handle_game_input():
 	if (game_manager.game_state != GameManager.GameState.WAITING_FOR_PLAYER
-		or game_manager.play_state == GameManager.PlayState.SELECT_ACTION):
+		or game_manager.play_state == GameManager.PlayState.SELECT_ACTION
+		or game_manager.play_state == GameManager.PlayState.SELECT_ATTACK_TARGET):
 		if move_dir != Vector2i.ZERO:
 			move_dir = Vector2i.ZERO
 		if not timer.is_stopped():

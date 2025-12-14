@@ -1,0 +1,191 @@
+[gd_scene load_steps=7 format=3 uid="uid://bst7deu4y3ag"]
+
+[ext_resource type="Script" uid="uid://b8mfqpjj7osge" path="res://Scripts/UI/QuickAttackInfoUIi.gd" id="1_ciw8b"]
+[ext_resource type="Texture2D" uid="uid://c0msj26dww256" path="res://Sprites/General/CombatBackgrounds/QuickAttackInfoCrit.png" id="1_ycwax"]
+[ext_resource type="FontFile" uid="uid://cei85tmgnaxi7" path="res://Fonts/fusion-pixel-monospaced.ttf" id="3_ciw8b"]
+[ext_resource type="Texture2D" uid="uid://b7rfqp62ylf6g" path="res://Sprites/Items/sword_0.tres" id="3_j3min"]
+[ext_resource type="SpriteFrames" uid="uid://b8fhoj6m5sj6j" path="res://SpriteFrames/ItemArrowDown.tres" id="4_7uq4e"]
+[ext_resource type="SpriteFrames" uid="uid://babl0rhrha8bg" path="res://SpriteFrames/ItemArrowUp.tres" id="4_j3min"]
+
+[node name="QuickAttackInfoUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ciw8b")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 69.0
+offset_bottom = 121.0
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_ycwax")
+
+[node name="Weapon1" type="TextureRect" parent="Panel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 20.0
+offset_bottom = 19.0
+texture = ExtResource("3_j3min")
+
+[node name="WeaponArrow1" type="AnimatedSprite2D" parent="Panel/Weapon1"]
+visible = false
+position = Vector2(12, 12)
+sprite_frames = ExtResource("4_j3min")
+autoplay = "default"
+
+[node name="Name1" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 2.0
+offset_right = 61.0
+offset_bottom = 25.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 8
+text = "马可波罗"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HP1" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 22.0
+offset_right = 63.0
+offset_bottom = 37.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Power1" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 37.0
+offset_right = 63.0
+offset_bottom = 52.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Hit1" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 52.0
+offset_right = 63.0
+offset_bottom = 67.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Crit1" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 67.0
+offset_right = 63.0
+offset_bottom = 82.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="HP2" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 22.0
+offset_right = 18.0
+offset_bottom = 37.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Power2" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 37.0
+offset_right = 18.0
+offset_bottom = 52.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Hit2" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 52.0
+offset_right = 18.0
+offset_bottom = 67.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Crit2" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 67.0
+offset_right = 18.0
+offset_bottom = 82.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 10
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Weapon2" type="TextureRect" parent="Panel"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 83.0
+offset_right = 62.0
+offset_bottom = 99.0
+texture = ExtResource("3_j3min")
+
+[node name="WeaponArrow2" type="AnimatedSprite2D" parent="Panel/Weapon2"]
+visible = false
+position = Vector2(12, 12)
+sprite_frames = ExtResource("4_7uq4e")
+autoplay = "default"
+
+[node name="Name2" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 82.0
+offset_right = 49.0
+offset_bottom = 105.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 8
+text = "马可波罗"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponName" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 96.0
+offset_right = 54.0
+offset_bottom = 119.0
+theme_override_fonts/font = ExtResource("3_ciw8b")
+theme_override_font_sizes/font_size = 8
+text = "武器名"
+horizontal_alignment = 1
+vertical_alignment = 1

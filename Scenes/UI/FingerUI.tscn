@@ -1,0 +1,82 @@
+[gd_scene load_steps=5 format=3 uid="uid://cyv77kdkovsyp"]
+
+[ext_resource type="Texture2D" uid="uid://crrstbiml7viy" path="res://Sprites/UI/MenuBackgrounds/menuHand.png" id="1_qvfl2"]
+
+[sub_resource type="Animation" id="Animation_i611i"]
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FingerUI/Control/TextureRect:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(13, 14)]
+}
+
+[sub_resource type="Animation" id="Animation_lcm2s"]
+resource_name = "default"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("FingerUI/Control/TextureRect:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(13, 14), Vector2(18, 14), Vector2(13, 14)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i611i"]
+_data = {
+&"RESET": SubResource("Animation_i611i"),
+&"default": SubResource("Animation_lcm2s")
+}
+
+[node name="FingerUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.84874
+offset_top = -6.0
+offset_right = 10.1512
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(7.5, 6)
+texture = ExtResource("1_qvfl2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../..")
+libraries = {
+&"": SubResource("AnimationLibrary_i611i")
+}
+autoplay = "default"
+speed_scale = 1.5

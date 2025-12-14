@@ -12,6 +12,7 @@ class BattleUnit:
 	var defense : int
 	var resistance : int
 	var hp : int
+	var weapon : Weapon
 
 func create_battle_unit(unit: Unit) -> BattleUnit:
 	var battle_unit = BattleUnit.new()
@@ -26,6 +27,18 @@ func create_battle_unit(unit: Unit) -> BattleUnit:
 	battle_unit.defense = stats.defense
 	battle_unit.resistance = stats.resistance
 	battle_unit.hp = stats.hp
+
+	battle_unit.weapon = unit.weapon
+	if battle_unit.weapon == null:
+		var weapon_items = unit.inventory.get_weapon_items()
+		if weapon_items.size() > 0:
+			unit.weapon = weapon_items[0]
+			battle_unit.weapon = unit.weapon
+			print("警告：单位 %s 自动装备武器 %s" % [unit.unit_name, battle_unit.weapon.item_name])
+		else:
+			print("警告：单位 %s 没有装备武器，使用默认武器" % unit.unit_name)
+			battle_unit.weapon = ItemManager.create_item_instance("空手") as Weapon
+
 	return battle_unit
 
 class BattleResult:
@@ -50,11 +63,39 @@ var skip_battle_anim : bool = false
 var preare_data : Dictionary
 var battle_scene : BattleSceneUI
 
+# 武器克制关系，剑克制斧，斧克制枪，枪克制剑
+const weapon_triangle : Dictionary = {
+	Weapon.WeaponType.NONE : Weapon.WeaponType.NONE,
+	Weapon.WeaponType.SWORD : Weapon.WeaponType.AXE,
+	Weapon.WeaponType.AXE : Weapon.WeaponType.LANCE,
+	Weapon.WeaponType.LANCE : Weapon.WeaponType.SWORD
+}
+
 func _ready() -> void:
 	add_user_signal("hp_changed", [TYPE_STRING, TYPE_INT, TYPE_INT])
 
 func is_skip_battle_anim() -> bool:
 	return skip_battle_anim
+
+func quick_battle_info(attacker: Unit, defender: Unit) -> Dictionary:
+	var attacker_battle_unit = create_battle_unit(attacker)
+	var defender_battle_unit = create_battle_unit(defender)
+	return _quick_battle_info(attacker_battle_unit, defender_battle_unit)
+	
+
+func _quick_battle_info(attacker: BattleUnit, defender: BattleUnit) -> Dictionary:
+	return  {
+		attacker.unit_name : {
+			"hit_rate" : calc_hit_rate(attacker, defender),
+			"damage" : calc_damage(attacker, defender),
+			"critical_rate" : calc_critical_rate(attacker, defender)
+		},
+		defender.unit_name : {
+			"hit_rate" : calc_hit_rate(defender, attacker),
+			"damage" : calc_damage(defender, attacker),
+			"critical_rate" : calc_critical_rate(defender, attacker)
+		}
+	}
 
 func battle(attacker: Unit, defender: Unit):
 	# 准备数据
@@ -92,8 +133,18 @@ func preare_battle_data(attacker: Unit, defender: Unit) -> Dictionary:
 		"defender": defender_battle_unit
 	}
 
+static func is_triangle_weapon(attacker_weapon_type: Weapon.WeaponType, defender_weapon_type: Weapon.WeaponType) -> bool:
+	if weapon_triangle[attacker_weapon_type] == defender_weapon_type:
+		return true
+	return false
+
 func calc_damage(attacker: BattleUnit, defender: BattleUnit) -> int:
-	var damage = attacker.strength - defender.defense
+	var damage = (attacker.weapon.power / 10.0) * (attacker.strength - defender.defense)
+	print("计算伤害: 武器威:%d 力量:%d 防:%d 计算结果 (%d / 10) * (%d - %d) = %d" % [attacker.weapon.power, attacker.strength, defender.defense, attacker.weapon.power, attacker.strength, defender.defense, damage])
+	#根据克制关系最终伤害调整
+	if is_triangle_weapon(attacker.weapon.weapon_type, defender.weapon.weapon_type):
+		damage = damage * 1.5
+		print("克制加成，最终伤害 %d" % damage)
 	if damage < 0:
 		damage = 0
 	return damage
@@ -111,19 +162,7 @@ func simulate_battle(attacker: BattleUnit, defender: BattleUnit) -> BattleResult
 	var battle_result = BattleResult.new()
 	battle_result.attacker = attacker
 	battle_result.defender = defender
-	battle_result.show_attr_dict = {
-		attacker.unit_name : {
-			"hit_rate" : calc_hit_rate(attacker, defender),
-			"damage" : calc_damage(attacker, defender),
-			"critical_rate" : calc_critical_rate(attacker, defender)
-		},
-		defender.unit_name : {
-			"hit_rate" : calc_hit_rate(defender, attacker),
-			"damage" : calc_damage(defender, attacker),
-			"critical_rate" : calc_critical_rate(defender, attacker)
-		}
-	}
-
+	battle_result.show_attr_dict = _quick_battle_info(attacker, defender)
 
 	var attaacker_round_result = simulate_round(attacker, defender)
 	battle_result.round_results.append(attaacker_round_result)
@@ -180,6 +219,8 @@ func present_battle_result(battle_result: BattleResult):
 func apply_battle_result(battle_result: BattleResult):
 	var attacker_unit = preare_data["attacker_real_unit"] as Unit
 	var defender_unit = preare_data["defender_real_unit"] as Unit
+	attacker_unit.inventory.use_item_by_reference(battle_result.attacker.weapon, attacker_unit)
+	defender_unit.inventory.use_item_by_reference(battle_result.defender.weapon, defender_unit)
 	attacker_unit.unit_stats.hp = battle_result.attacker.hp
 	defender_unit.unit_stats.hp = battle_result.defender.hp
 	check_unit_alive(defender_unit, attacker_unit)
