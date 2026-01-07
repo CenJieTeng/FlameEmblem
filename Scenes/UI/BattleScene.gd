@@ -62,7 +62,9 @@ func init(p_battle_system: BattleSystem, p_attacker_unit: Unit, p_defender_unit:
 		"hp_label": left_unit_hp_label,
 		"hp_bar": left_unit_hp_bar,
 		"sprite": left_unit_sprite,
-		"anim_player": left_unit_anim_player
+		"anim_player": left_unit_anim_player,
+		"weapon_texture": left_unit_weapon_texture,
+		"weapon_label": left_unit_weapon_label
 	}
 
 	node_side_dict[SIDE.RIGHT] = {
@@ -70,7 +72,9 @@ func init(p_battle_system: BattleSystem, p_attacker_unit: Unit, p_defender_unit:
 		"hp_label": right_unit_hp_label,
 		"hp_bar": right_unit_hp_bar,
 		"sprite": right_unit_sprite,
-		"anim_player": right_unit_anim_player
+		"anim_player": right_unit_anim_player,
+		"weapon_texture": right_unit_weapon_texture,
+		"weapon_label": right_unit_weapon_label
 	}
 
 	left_unit_name_label.text = enemy_unit.unit_name
@@ -78,8 +82,6 @@ func init(p_battle_system: BattleSystem, p_attacker_unit: Unit, p_defender_unit:
 	left_unit_dmg_label.text = str(battle_result.show_attr_dict[enemy_unit.unit_name]["damage"])
 	left_unit_crt_label.text = str(battle_result.show_attr_dict[enemy_unit.unit_name]["critical_rate"])
 	update_hp_bar(SIDE.LEFT, enemy_unit.get_stats().hp, enemy_unit.get_stats().max_hp)
-	left_unit_weapon_texture.texture = enemy_unit.weapon.icon_texture
-	left_unit_weapon_label.text = enemy_unit.weapon.item_name
 	left_unit_anim_player.remove_animation_library("")
 	left_unit_anim_player.clear_caches()
 	left_unit_anim_player.add_animation_library("",enemy_unit.unit_data.animation_library)
@@ -90,12 +92,12 @@ func init(p_battle_system: BattleSystem, p_attacker_unit: Unit, p_defender_unit:
 	right_unit_dmg_label.text = str(battle_result.show_attr_dict[play_unit.unit_name]["damage"])
 	right_unit_crt_label.text = str(battle_result.show_attr_dict[play_unit.unit_name]["critical_rate"])
 	update_hp_bar(SIDE.RIGHT, play_unit.get_stats().hp, play_unit.get_stats().max_hp)
-	right_unit_weapon_texture.texture = play_unit.weapon.icon_texture
-	right_unit_weapon_label.text = play_unit.weapon.item_name
 	right_unit_anim_player.remove_animation_library("")
 	right_unit_anim_player.clear_caches()
 	right_unit_anim_player.add_animation_library("",play_unit.unit_data.animation_library)
 	right_unit_anim_player.play("RESET")
+
+	# 武器信息将在play_battle_animation中根据回合更新
 
 func update_hp_bar(side, hp, max_hp):
 	var node_dict = node_side_dict[side]
@@ -108,6 +110,17 @@ func update_hp_bar(side, hp, max_hp):
 	hp_bar.material.set_shader_parameter("tile_count", tile_scale)
 	hp_bar.material.set_shader_parameter("progress", float(hp) / float(max_hp))
 
+func update_weapon_display(attacker_side : SIDE, defender_side : SIDE):
+	# 更新攻击方武器
+	var attacker_node_dict = node_side_dict[attacker_side]
+	attacker_node_dict["weapon_texture"].texture = round_result.attacker_weapon.icon_texture
+	attacker_node_dict["weapon_label"].text = round_result.attacker_weapon.item_name
+
+	# 更新防御方武器
+	var defender_node_dict = node_side_dict[defender_side]
+	defender_node_dict["weapon_texture"].texture = round_result.defender_weapon.icon_texture
+	defender_node_dict["weapon_label"].text = round_result.defender_weapon.item_name
+
 func opposite_side(side):
 	return SIDE.LEFT if side == SIDE.RIGHT else SIDE.RIGHT
 
@@ -115,6 +128,9 @@ func play_battle_animation(p_round_result: BattleSystem.RoundResult, attacker: U
 	attack_side = SIDE.RIGHT if attacker.camp == Unit.UnitCamp.PLAYER else SIDE.LEFT
 	defend_side = opposite_side(attack_side)
 	round_result = p_round_result
+
+	# 更新当前回合的武器显示
+	update_weapon_display(attack_side, defend_side)
 
 	var node_dict = node_side_dict[attack_side]
 	var anim_player = node_dict["anim_player"] as AnimationPlayer

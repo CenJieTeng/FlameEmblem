@@ -36,8 +36,11 @@ func open_ui():
 		child.queue_free()
 
 	weapon_items = game_manager.current_unit.inventory.get_weapon_items()
+	if weapon_items.size() == 0:
+		var unarmed_weapon = ItemManager.create_item_instance("空手") as Weapon
+		weapon_items.append(unarmed_weapon)
 	item_count = weapon_items.size()
-	for weapon in game_manager.current_unit.inventory.get_weapon_items():
+	for weapon in weapon_items:
 		var weapon_ui = weapon_ui_template.duplicate() as Control
 		weapon_ui.get_node("Control/WeaponName").text = weapon.item_name
 		weapon_ui.get_node("Control/Uses").text = str(weapon.uses)
@@ -50,7 +53,7 @@ func open_ui():
 	update_weapon_info()
 
 func update_weapon_info():
-	var weapon = game_manager.current_unit.inventory.get_weapon_items()[index - 1]
+	var weapon = weapon_items[index - 1]
 	attack_value.text = str(weapon.power)
 	hit_value.text = str(weapon.hit)
 	crit_value.text = str(weapon.crit)

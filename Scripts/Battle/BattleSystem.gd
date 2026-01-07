@@ -13,6 +13,7 @@ class BattleUnit:
 	var resistance : int
 	var hp : int
 	var weapon : Weapon
+	var unit_reference : Unit  # 保存对原始Unit的引用
 
 func create_battle_unit(unit: Unit) -> BattleUnit:
 	var battle_unit = BattleUnit.new()
@@ -27,6 +28,7 @@ func create_battle_unit(unit: Unit) -> BattleUnit:
 	battle_unit.defense = stats.defense
 	battle_unit.resistance = stats.resistance
 	battle_unit.hp = stats.hp
+	battle_unit.unit_reference = unit
 
 	battle_unit.weapon = unit.weapon
 	if battle_unit.weapon == null:
@@ -51,6 +53,8 @@ class BattleResult:
 class RoundResult:
 	var attacker : BattleUnit
 	var defender : BattleUnit
+	var attacker_weapon : Weapon
+	var defender_weapon : Weapon
 	var damage : int
 	var origin_hp : int
 	var hp : int
@@ -138,6 +142,25 @@ static func is_triangle_weapon(attacker_weapon_type: Weapon.WeaponType, defender
 		return true
 	return false
 
+func refresh_battle_unit_weapon(battle_unit: BattleUnit):
+	# 每个回合重新从实际单位获取武器
+	var real_unit = battle_unit.unit_reference
+	if real_unit == null:
+		return
+
+	var current_weapon = real_unit.weapon
+	if current_weapon == null:
+		var weapon_items = real_unit.inventory.get_weapon_items()
+		if weapon_items.size() > 0:
+			real_unit.weapon = weapon_items[0]
+			current_weapon = real_unit.weapon
+		else:
+			# 没有武器则使用空手,并更新到原始单位的weapon字段
+			current_weapon = ItemManager.create_item_instance("空手") as Weapon
+			real_unit.weapon = current_weapon
+
+	battle_unit.weapon = current_weapon
+
 func calc_damage(attacker: BattleUnit, defender: BattleUnit) -> int:
 	var damage = (attacker.weapon.power / 10.0) * (attacker.strength - defender.defense)
 	print("计算伤害: 武器威:%d 力量:%d 防:%d 计算结果 (%d / 10) * (%d - %d) = %d" % [attacker.weapon.power, attacker.strength, defender.defense, attacker.weapon.power, attacker.strength, defender.defense, damage])
@@ -179,6 +202,14 @@ func simulate_round(attacker: BattleUnit, defender: BattleUnit) -> RoundResult:
 	round_result.defender = defender
 	round_result.origin_hp = defender.hp
 
+	# 每个回合开始时重新计算武器
+	refresh_battle_unit_weapon(attacker)
+	refresh_battle_unit_weapon(defender)
+
+	# 记录当前回合使用的武器
+	round_result.attacker_weapon = attacker.weapon
+	round_result.defender_weapon = defender.weapon
+
 	var hit_rate = calc_hit_rate(attacker, defender)
 	var roll = randi() % 100
 	if roll >= hit_rate:
@@ -191,7 +222,7 @@ func simulate_round(attacker: BattleUnit, defender: BattleUnit) -> RoundResult:
 		defender.hp -= damage
 		if defender.hp < 0:
 			defender.hp = 0
-			
+
 	round_result.hp = defender.hp
 	return round_result
 
@@ -219,8 +250,14 @@ func present_battle_result(battle_result: BattleResult):
 func apply_battle_result(battle_result: BattleResult):
 	var attacker_unit = preare_data["attacker_real_unit"] as Unit
 	var defender_unit = preare_data["defender_real_unit"] as Unit
-	attacker_unit.inventory.use_item_by_reference(battle_result.attacker.weapon, attacker_unit)
-	defender_unit.inventory.use_item_by_reference(battle_result.defender.weapon, defender_unit)
+
+	# 对每个回合实际使用的武器进行耐久度消耗
+	for round_result in battle_result.round_results:
+		if round_result.attacker_weapon != null:
+			attacker_unit.inventory.use_item_by_reference(round_result.attacker_weapon, attacker_unit)
+		if round_result.defender_weapon != null:
+			defender_unit.inventory.use_item_by_reference(round_result.defender_weapon, defender_unit)
+
 	attacker_unit.unit_stats.hp = battle_result.attacker.hp
 	defender_unit.unit_stats.hp = battle_result.defender.hp
 	check_unit_alive(defender_unit, attacker_unit)

@@ -1,15 +1,19 @@
-[gd_resource type="Resource" script_class="Weapon" load_steps=2 format=3 uid="uid://1qjx8hiqgw61"]
+[gd_resource type="Resource" script_class="Weapon" load_steps=3 format=3 uid="uid://1qjx8hiqgw61"]
 
 [ext_resource type="Script" uid="uid://d17a8h0yonpw0" path="res://Scripts/Inventory/Weapon.gd" id="1_2odi2"]
+[ext_resource type="Texture2D" uid="uid://b7rfqp62ylf6g" path="res://Sprites/Items/sword_0.tres" id="1_i3g1x"]
 
 [resource]
 script = ExtResource("1_2odi2")
+weapon_type = 0
 power = 1
 hit = 100
 crit = 0
+miss = 0
 atk_range = 1
 item_name = "空手"
 item_type = 0
+icon_texture = ExtResource("1_i3g1x")
 description = ""
 uses = 0
 metadata/_custom_type_script = "uid://d17a8h0yonpw0"
