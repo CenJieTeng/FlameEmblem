@@ -1,0 +1,12 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dhad20la3w83j"]
+
+[ext_resource type="Script" uid="uid://db7qg2q1pqsyc" path="res://Scripts/Inventory/Potion.gd" id="1_3p1ms"]
+
+[resource]
+script = ExtResource("1_3p1ms")
+recover_hp = 10
+item_name = "恢复药水"
+item_type = 1
+description = ""
+uses = 1
+metadata/_custom_type_script = "uid://k5jj203j3848"

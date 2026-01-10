@@ -10,7 +10,8 @@ enum UI_NAME
 	UNIT_FIGHT_INFO_UI,
 	BATTLE_SCENE_UI,
 	SELECT_WEAPON_UI,
-	QUICK_ATTACK_INFO_UI
+	QUICK_ATTACK_INFO_UI,
+	SELECT_ITEM_UI
 }
 
 var window_size : Vector2
@@ -25,7 +26,8 @@ var ui_name_dict = {
 	UI_NAME.UNIT_FIGHT_INFO_UI: "UnitFightInfoUI",
 	UI_NAME.BATTLE_SCENE_UI: "BattleSceneUI",
 	UI_NAME.SELECT_WEAPON_UI: "SelectWeaponUI",
-	UI_NAME.QUICK_ATTACK_INFO_UI: "QuickAttackInfoUI"
+	UI_NAME.QUICK_ATTACK_INFO_UI: "QuickAttackInfoUI",
+	UI_NAME.SELECT_ITEM_UI: "SelectItemUI"
 }
 
 func _ready() -> void:
@@ -46,6 +48,7 @@ func get_window_size() -> Vector2:
 func register_ui(ui_name: UI_NAME, ui: BaseUI):
 	if ui_dict.has(ui_name):
 		printerr("注册UI名称已经存在 ", ui_name)
+		return
 	ui_dict[ui_name] = ui
 	print("注册UI ", ui_name_dict[ui_name])
 	

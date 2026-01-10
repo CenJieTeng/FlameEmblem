@@ -53,6 +53,7 @@ func init(p_name: String, pos: Vector2i, p_camp: UnitCamp) -> void:
 	inventory.item_removed.connect(_on_item_removed)
 	inventory.add_item(ItemManager.create_item_instance("铁斧"))
 	inventory.add_item(ItemManager.create_item_instance("铁剑"))
+	inventory.add_item(ItemManager.create_item_instance("恢复药水"))
 	weapon = inventory.get_item(0) as Weapon
 
 	grid_position = pos

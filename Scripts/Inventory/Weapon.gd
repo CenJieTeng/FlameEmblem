@@ -17,9 +17,3 @@ enum WeaponType {
 
 func _init():
 	item_type = ItemType.WEAPON
-
-func use(_unit: Unit) -> bool:
-	if (uses <= 0):
-		return false
-	uses -= 1
-	return true

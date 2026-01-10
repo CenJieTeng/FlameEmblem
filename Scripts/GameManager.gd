@@ -52,7 +52,7 @@ enum PlayState{
 	SELECT_ACTION,
 	SELECT_WEAPON,
 	SELECT_ATTACK_TARGET,
-	SELECT_USE_ITEM,
+	SELECT_ITEM,
 }
 var play_state := PlayState.NONE:
 	set(value):
@@ -68,7 +68,7 @@ var enemy_state := EnemyState.NONE
 var _skip_rollback_states = {
 	PlayState.SELECT_WEAPON: true,
 	PlayState.SELECT_ATTACK_TARGET: true,
-	PlayState.SELECT_USE_ITEM: true,
+	PlayState.SELECT_ITEM: true,
 }
 
 # 调试
@@ -254,6 +254,12 @@ func handle_input() -> UnitCommand:
 				UIManager.close(UIManager.UI_NAME.QUICK_ATTACK_INFO_UI)
 				UIManager.open(UIManager.UI_NAME.SELECT_WEAPON_UI)
 				play_state = PlayState.SELECT_WEAPON
+			PlayState.SELECT_ITEM:
+				cursor.set_pos2(current_unit.grid_position)
+				grid_map.clear_moveable_sprites()
+				UIManager.close(UIManager.UI_NAME.SELECT_ITEM_UI)
+				UIManager.open(UIManager.UI_NAME.UNIT_MENU)
+				play_state = PlayState.SELECT_ACTION
 	
 	return null
 	
@@ -433,6 +439,9 @@ func select_menu_item(index: int):
 		1:
 			play_state = PlayState.SELECT_WEAPON
 			UIManager.open(UIManager.UI_NAME.SELECT_WEAPON_UI)
+		2:
+			play_state = PlayState.SELECT_ITEM
+			UIManager.open(UIManager.UI_NAME.SELECT_ITEM_UI)
 		3:
 			push_command(UnitStandbyCommand.new(current_unit))
 			current_unit = null
@@ -481,6 +490,12 @@ func select_attack_target(index: int):
 		attack_info_ui.position = Vector2(window_size.x - 69 - window_size.x / 20, window_size.y / 20)
 	else:
 		attack_info_ui.position = Vector2(window_size.x / 20, window_size.y / 20)
+
+func select_use_item(item: Item):
+	current_unit.inventory.use_item_by_reference(item, current_unit)
+	UIManager.close(UIManager.UI_NAME.SELECT_ITEM_UI)
+	UIManager.open(UIManager.UI_NAME.UNIT_MENU)
+	play_state = PlayState.SELECT_ACTION
 
 func fight(attack_unit: Unit, target_unit: Unit):
 	game_state = GameState.GAME_RUNING

@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://6gr24n0d2p2r" path="res://Scenes/UI/SelectWeaponUI.tscn" id="15_c0txr"]
 [ext_resource type="Script" uid="uid://blwtgpu4ylf0w" path="res://Scripts/Battle/BattleSystem.gd" id="16_gnp58"]
 [ext_resource type="PackedScene" uid="uid://bst7deu4y3ag" path="res://Scenes/UI/QuickAttackInfoUI.tscn" id="16_lnt5q"]
+[ext_resource type="PackedScene" uid="uid://select_item_ui" path="res://Scenes/UI/SelectItemUI.tscn" id="17_lnt5q"]
 [ext_resource type="Script" uid="uid://lhmii5chwajc" path="res://Scripts/AI/AIManager.gd" id="18_xql8f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uwe06"]
@@ -125,6 +126,9 @@ metadata/_edit_horizontal_guides_ = [80.0]
 visible = false
 
 [node name="QuickAttackInfoUI" parent="CanvasLayer" instance=ExtResource("16_lnt5q")]
+visible = false
+
+[node name="SelectItemUI" parent="CanvasLayer" instance=ExtResource("17_lnt5q")]
 visible = false
 
 [node name="Cursor" type="Node2D" parent="."]

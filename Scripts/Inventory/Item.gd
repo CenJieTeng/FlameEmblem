@@ -14,4 +14,7 @@ enum ItemType {
 @export var uses: int = 0				# 剩余使用次数
 
 func use(_unit: Unit) -> bool:
-	return false
+	if (uses <= 0):
+		return false
+	uses -= 1
+	return true
