@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://bc3x1po3015af"
+path="res://.godot/imported/Chapter_Black.fnt-f0203e37b2d57d2cc1a8af03fa0d125b.fontdata"
+
+[deps]
+
+source_file="res://Fonts/Chapter_Black.fnt"
+dest_files=["res://.godot/imported/Chapter_Black.fnt-f0203e37b2d57d2cc1a8af03fa0d125b.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2
