@@ -71,24 +71,22 @@ func update_item_info():
 		var current_item = usable_items[index - 1]
 		recover_value.text = str(current_item.recover_hp)
 
-func handle_ui_input() -> bool:
-	if Input.is_action_just_pressed("up"):
+func _gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("up"):
 		index -= 1
 		index = clamp(index, 1, item_count)
 		finger_ui.position.y = init_offset + offset * (index - 1)
 		update_item_info()
-	if Input.is_action_just_pressed("down"):
+	if event.is_action_pressed("down"):
 		index += 1
 		index = clamp(index, 1, item_count)
 		finger_ui.position.y = init_offset + offset * (index - 1)
 		update_item_info()
-	if Input.is_action_just_pressed("mouse_left"):
+	if event.is_action_pressed("mouse_left"):
 		if item_count > 0:
 			var usable_items: Array[Item] = []
 			for item in items:
 				if item.item_type == Item.ItemType.CONSUMABLE and item.uses > 0:
 					usable_items.append(item)
-
 			game_manager.select_use_item(usable_items[index - 1])
-
-	return true
+			get_viewport().set_input_as_handled()

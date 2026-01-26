@@ -21,19 +21,25 @@ func open_ui():
 	super.open_ui()
 	input_field.grab_focus()
 	
-func handle_ui_input() -> bool:
-	if Input.is_action_just_pressed("toggle_console"):
+func _gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("toggle_console"):
 		close_ui()
-	if Input.is_action_just_pressed("up"):
+		get_viewport().set_input_as_handled()
+	if event.is_action_pressed("up"):
 		input_field.text = last_command
 		input_field.grab_focus()
-	return true
+
+func _on_input_field_gui_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.keycode == KEY_ESCAPE and event.is_pressed():
+			self.grab_focus()
 	
 func _on_command_submitted(command: String):
 	if command.strip_edges() != "":
 		excute_command(command)
 		last_command = command
 	input_field.clear()
+	self.grab_focus()
 	
 func excute_command(command: String):
 	var parts = command.split(" ")

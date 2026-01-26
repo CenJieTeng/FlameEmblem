@@ -23,19 +23,14 @@ func open_ui():
 	index = 1
 	finger_ui.position.y = init_offset
 
-func handle_ui_input() -> bool:
-	if game_manager.play_state != GameManager.PlayState.SELECT_ACTION:
-		return false
-	
-	if Input.is_action_just_pressed("up"):
+func _gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("up"):
 		index -= 1
 		index = clamp(index, 1, item_count)
 		finger_ui.position.y = init_offset + offset * (index - 1)
-	if Input.is_action_just_pressed("down"):
+	if event.is_action_pressed("down"):
 		index += 1
 		index = clamp(index, 1, item_count)
 		finger_ui.position.y = init_offset + offset * (index - 1)
-	if Input.is_action_just_pressed("mouse_left"):
+	if event.is_action_pressed("mouse_left"):
 		game_manager.select_menu_item(index)
-		
-	return true

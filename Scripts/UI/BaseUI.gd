@@ -21,6 +21,3 @@ func close_ui():
 	if is_handle_input():
 		UIManager.unregister_ui_input_handler(self)
 	#print("关闭UI ", UIManager.ui_name_dict[get_ui_name()])
-
-func handle_ui_input() -> bool:
-	return false

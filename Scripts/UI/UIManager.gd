@@ -52,13 +52,22 @@ func register_ui(ui_name: UI_NAME, ui: BaseUI):
 	ui_dict[ui_name] = ui
 	print("注册UI ", ui_name_dict[ui_name])
 	
+func is_handle_ui_input() -> bool:
+	return not ui_input_handlers.is_empty()
+
 func register_ui_input_handler(ui: BaseUI):
 	if not ui_input_handlers.has(ui):
 		ui_input_handlers.append(ui)
+		ui.focus_mode = Control.FOCUS_ALL
+		ui.grab_focus()
 		
 func unregister_ui_input_handler(ui: BaseUI):
 	if ui_input_handlers.has(ui):
 		ui_input_handlers.erase(ui)
+		ui.focus_mode = Control.FOCUS_NONE
+		ui.release_focus()
+		if not ui_input_handlers.is_empty():
+			ui_input_handlers.back().grab_focus()
 
 func open(ui_name: UI_NAME):
 	if ui_dict.has(ui_name):
@@ -67,10 +76,3 @@ func open(ui_name: UI_NAME):
 func close(ui_name: UI_NAME):
 	if ui_dict.has(ui_name):
 		ui_dict[ui_name].close_ui()
-
-func handle_ui_input():
-	for i in range(ui_input_handlers.size() - 1, -1, -1):
-		if ui_input_handlers[i].handle_ui_input():
-			return true
-	return false
-		

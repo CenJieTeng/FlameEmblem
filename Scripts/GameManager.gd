@@ -78,7 +78,6 @@ var default_font_size = ThemeDB.fallback_font_size
 var enemy_unit : Unit
  
 func _ready() -> void:
-	InputManager.register_game_input_handlers(self)
 	window_size = get_viewport().get_visible_rect().size / DisplayServer.screen_get_scale()
 	movement_arrow_tilest = preload("res://Sprites/TileSet/MovementArrows.tres")
 	default_font = load("res://Fonts/fusion-pixel-monospaced.ttf") as FontFile
@@ -97,8 +96,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	queue_redraw()
 	
-func handle_game_input():
-	if Input.is_action_just_pressed("toggle_console"):
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("toggle_console"):
 		UIManager.open(UIManager.UI_NAME.CONSOLE)
 		return
 		
@@ -109,7 +108,7 @@ func handle_game_input():
 	var command : UnitCommand = null
 	match game_state:
 		GameState.WAITING_FOR_PLAYER:
-			command = handle_input()
+			command = handle_input(event)
 		GameState.WAITING_FOR_AI:
 			await get_tree().create_timer(0.5).timeout
 			command = ai_manager.process_ai_turn()
@@ -169,13 +168,13 @@ func _on_cursor_pos_change():
 
 	check_hud_state()
 
-func handle_input() -> UnitCommand:
+func handle_input(event: InputEvent) -> UnitCommand:
 	match play_state:
 		PlayState.NONE:
-			if Input.is_action_just_pressed("mouse_left"):
+			if event.is_action_pressed("mouse_left"):
 				var unit = get_unit_by_grid(cursor.pos)
 				select_unit(unit)
-			if Input.is_action_just_pressed("RB"):
+			if event.is_action_pressed("RB"):
 				for i in range(unit_list.size()):
 					var next_select_index = (select_unit_index + i + 1) % unit_list.size()
 					var unit = unit_list[next_select_index]
@@ -184,7 +183,7 @@ func handle_input() -> UnitCommand:
 						select_unit_index = next_select_index
 						break
 		PlayState.SELECT_UNIT:
-			if Input.is_action_just_pressed("mouse_left"):
+			if event.is_action_pressed("mouse_left"):
 				if cursor.pos == current_unit.grid_position:
 					grid_map.clear_moveable_sprites()
 					play_state = PlayState.SELECT_ACTION
@@ -198,12 +197,12 @@ func handle_input() -> UnitCommand:
 						grid_map.clear_moveable_sprites()
 						return UnitMoveCommand.new(current_unit, gold_grid)
 		PlayState.SELECT_ATTACK_TARGET:
-			if Input.is_action_just_pressed("left") or Input.is_action_just_pressed("up"):
+			if event.is_action_pressed("left") or event.is_action_pressed("up"):
 				select_attack_target(select_attack_index - 1)
-			if Input.is_action_just_pressed("right") or Input.is_action_just_pressed("down"):
+			if event.is_action_pressed("right") or event.is_action_pressed("down"):
 				select_attack_target(select_attack_index + 1)
 
-			if Input.is_action_just_pressed("mouse_left"):
+			if event.is_action_pressed("mouse_left"):
 				if current_unit.is_in_attack_range(cursor.pos):
 					var target = get_unit_by_grid(cursor.pos)
 					if target:
@@ -212,7 +211,7 @@ func handle_input() -> UnitCommand:
 						return UnitAttackCommand.new(current_unit, target)
 
 	
-	if Input.is_action_just_pressed("mouse_right"):
+	if event.is_action_pressed("mouse_right"):
 		if not _skip_rollback_states.get(play_state, false) and not unit_command_list.is_empty():
 			var command = unit_command_list.back() as UnitCommand
 			if command.unit == current_unit and command.wave == wave_count:
